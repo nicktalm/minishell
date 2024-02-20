@@ -145,11 +145,6 @@ void	execmd(t_data data)
 		exe_other(data);
 }
 
-void	exe_pwd(void)
-{
-
-}
-
 void	exe_cd(t_data data)
 {
 	if (chdir(data.input[1]))
