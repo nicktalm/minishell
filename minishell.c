@@ -18,40 +18,35 @@ int	main(void)
 	char	*input;
 	int		i;
 	char	*path;
+	char	*name = NULL;
 
 	path = getenv("PATH");
 	data.cmdpath = ft_split(path, ':');
+	data.pipe = 0;
+	data.inputop = 0;
+	data.outputop = 0;
+	data.here_doc = 0;
+	data.outendop = 0;
+	if (isatty(STDOUT_FILENO))
+		name = ttyname(STDOUT_FILENO);
+	printf("name = %s\n", name);
 	while (1)
 	{
 		i = 0;
 		input = readline("\033[1;34mminishell > \033[0m");
+		printf("input befor = %s\n", input);
 		data.input = ft_split(input, ' ');
-		while (data.input[i])
+		int j = 0;
+		while (data.input[j])
 		{
-			if (!ft_strncmp(data.input[i], "|", ft_strlen("|")))
-			{
-				printf("pipex\n");
-				break ;
-			}
-			else if (!ft_strncmp(data.input[i], "<<", ft_strlen("<<")) || !ft_strncmp(data.input[i], ">>", ft_strlen(">>")))
-			{
-				printf("<< or >> \n");
-				break ;
-			}
-			else if (!ft_strncmp(data.input[i], "<", ft_strlen("<")) || !ft_strncmp(data.input[i], ">", ft_strlen(">")))
-			{
-				printf("< or > \n");
-				break ;
-			}
-			i++;
+			printf("input = %s\n", data.input[j]);
+			j++;
 		}
-		if (!data.input[i])
-			execmd(data);
+		check_for_operator(&data);
 		free(input);
 	}
 	return (0);
 }
-
 
 void exe_pwd(void)
 {
@@ -88,6 +83,33 @@ void exe_pwd(void)
 	free(cwd);
 }
 
+void	check_for_operator(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (data->input[i])
+	{
+		if (!ft_strncmp(data->input[i], "|", ft_strlen("|")))
+			data->pipe++;
+		else if (!ft_strncmp(data->input[i], "<<", ft_strlen("<<")))
+			data->here_doc++;
+		else if (!ft_strncmp(data->input[i], ">>", ft_strlen(">>")))
+			data->outendop++;
+		else if (!ft_strncmp(data->input[i], "<", ft_strlen("<")))
+			data->inputop++;
+		else if (!ft_strncmp(data->input[i], ">", ft_strlen(">")))
+			data->outputop++;
+		i++;
+	}
+	if (!ft_strncmp(data->input[0], "clear", ft_strlen("clear")))
+	{
+		printf("%s\n", tgetstr("clear", NULL));
+	}
+	else if (!data->input[i])
+		execmd(*data);
+}
+
 void	execmd(t_data data)
 {
 	if (!ft_strncmp(data.input[0], "echo", ft_strlen("echo")))
@@ -96,15 +118,9 @@ void	execmd(t_data data)
 		//exe_echo();
 	}
 	else if (!ft_strncmp(data.input[0], "cd", ft_strlen("cd")))
-	{
-		printf("cd\n");
-		//exe_cd();
-	}
+		exe_cd(data);
 	else if (!ft_strncmp(data.input[0], "pwd", ft_strlen("pwd")))
-	{
-		// printf("pwd\n");
 		exe_pwd();
-	}
 	else if (!ft_strncmp(data.input[0], "export", ft_strlen("export")))
 	{
 		printf("export\n");
@@ -126,10 +142,18 @@ void	execmd(t_data data)
 		//exe_exit();
 	}
 	else
-	{
-		printf("other\n");
 		exe_other(data);
-	}
+}
+
+void	exe_pwd(void)
+{
+
+}
+
+void	exe_cd(t_data data)
+{
+	if (chdir(data.input[1]))
+		error(ERROR_12);
 }
 
 void	exe_other(t_data data)
