@@ -1,6 +1,6 @@
 NAME = minishell
 CFLAGS = -Wall -Werror -Wextra
-LDFLAGS = -lreadline
+LDFLAGS = -lreadline -lncurses -fsanitize=address
 SRCS = minishell.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
