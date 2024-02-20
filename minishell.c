@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/20 13:26:49 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/20 13:33:17 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,41 @@ int	main(void)
 		free(input);
 	}
 	return (0);
+}
+
+void exe_pwd(void)
+{
+	char	*cwd;
+	int		size;
+
+	size = 1;
+	cwd = malloc(size * sizeof(char));
+	if (cwd == NULL)
+	{
+		perror("Failed to allocate memory");
+		exit(EXIT_FAILURE);
+	}
+	while (1)
+	{
+		if (getcwd(cwd, size) != NULL)
+			break ;
+		if (errno == ERANGE)
+		{
+			printf("%i\n", size);
+			size += 1;
+			free(cwd);
+			cwd = malloc(size * sizeof(char));
+			if (cwd == NULL)
+			{
+				perror("Failed to reallocate memory");
+				exit(EXIT_FAILURE);
+			}
+		}
+		else
+			error(ERROR_11);
+	}
+	printf("%s\n", cwd);
+	free(cwd);
 }
 
 void	check_for_operator(t_data *data)
@@ -118,7 +153,7 @@ void	exe_pwd(void)
 void	exe_cd(t_data data)
 {
 	if (chdir(data.input[1]))
-		error(ERROR_11);
+		error(ERROR_12);
 }
 
 void	exe_other(t_data data)

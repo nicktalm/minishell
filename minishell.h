@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/20 13:22:21 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/20 13:33:25 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	check_for_operator(t_data *data);
 # define ERROR_8 "access"
 # define ERROR_9 "wait"
 # define ERROR_10 "Empty String\n"
-# define ERROR_11 "cd"
+# define ERROR_11 "pwd"
+# define ERROR_12 "cd"
 
 #endif
