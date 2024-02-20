@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/19 17:49:42 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/20 13:33:25 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <dirent.h>
 # include <sys/ioctl.h>
 # include <termios.h>
+# include <errno.h>
 # include "./lib/libft/libft.h"
 
 // struct
@@ -55,5 +56,6 @@ void	error(char *msg);
 # define ERROR_8 "access"
 # define ERROR_9 "wait"
 # define ERROR_10 "Empty String\n"
+# define ERROR_11 "pwd"
 
 #endif
