@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/20 13:33:17 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/02/21 09:50:32 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ int	main(void)
 {
 	t_data	data;
 	char	*input;
-	int		i;
 	char	*path;
-	char	*name = NULL;
 
 	path = getenv("PATH");
 	data.cmdpath = ft_split(path, ':');
@@ -27,21 +25,10 @@ int	main(void)
 	data.outputop = 0;
 	data.here_doc = 0;
 	data.outendop = 0;
-	if (isatty(STDOUT_FILENO))
-		name = ttyname(STDOUT_FILENO);
-	printf("name = %s\n", name);
 	while (1)
 	{
-		i = 0;
 		input = readline("\033[1;34mminishell > \033[0m");
-		printf("input befor = %s\n", input);
-		data.input = ft_split(input, ' ');
-		int j = 0;
-		while (data.input[j])
-		{
-			printf("input = %s\n", data.input[j]);
-			j++;
-		}
+		data.input = split_with_q(input, ' ');
 		check_for_operator(&data);
 		free(input);
 	}
@@ -67,11 +54,7 @@ void	check_for_operator(t_data *data)
 			data->outputop++;
 		i++;
 	}
-	if (!ft_strncmp(data->input[0], "clear", ft_strlen("clear")))
-	{
-		printf("%s\n", tgetstr("clear", NULL));
-	}
-	else if (!data->input[i])
+	if (!data->input[i])
 		execmd(*data);
 }
 
@@ -106,6 +89,8 @@ void	execmd(t_data data)
 		printf("exit\n");
 		//exe_exit();
 	}
+	if (!ft_strncmp(data.input[0], "clear", ft_strlen("clear")))
+		printf("%s\n", tgetstr("clear", NULL));
 	else
 		exe_other(data);
 }
@@ -116,33 +101,24 @@ void	exe_cd(t_data data)
 		error(ERROR_12);
 }
 
-void exe_pwd(void)
+void	exe_pwd(void)
 {
 	char	*cwd;
 	int		size;
 
 	size = 1;
 	cwd = malloc(size * sizeof(char));
-	if (cwd == NULL)
+	if (!cwd)
+		error(ERROR_1);
+	while (getcwd(cwd, size) == NULL)
 	{
-		perror("Failed to allocate memory");
-		exit(EXIT_FAILURE);
-	}
-	while (1)
-	{
-		if (getcwd(cwd, size) != NULL)
-			break ;
 		if (errno == ERANGE)
 		{
-			printf("%i\n", size);
-			size += 1;
+			size++;
 			free(cwd);
 			cwd = malloc(size * sizeof(char));
-			if (cwd == NULL)
-			{
-				perror("Failed to reallocate memory");
-				exit(EXIT_FAILURE);
-			}
+			if (!cwd)
+				error(ERROR_1);
 		}
 		else
 			error(ERROR_11);
