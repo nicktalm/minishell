@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/20 13:33:25 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/02/20 18:20:29 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,14 @@ void	error(char *msg);
 void	exe_pwd(void);
 void	exe_cd(t_data data);
 void	check_for_operator(t_data *data);
+
+// split_with_quotes
+
+char	**split_with_q(char const *s, char c);
+int		how_many_words(char const *s, char c);
+char	*wordlen(char const *s, char c, int *p);
+char	**freeup(char	**arr);
+char	*quotes(char *s, int *p, char quot);
 
 // Error
 
