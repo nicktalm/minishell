@@ -6,28 +6,25 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 10:38:51 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/20 10:43:55 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/21 10:46:38 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exe_pipe(int argc, char **argv, char **envp)
+int	exe_pipe(t_data data)
 {
-	t_data	data;
-
-	data.files = NULL;
-	data.cmd = NULL;
-	data.path = NULL;
-	open_in_and_outfile_bonus(argc, argv, &data);
-	search_env_path(envp, &data);
-	parsing_paths(envp[data.path_nbr], &data);
-	execute_cmds_bonus(data, envp);
-	freeall(data);
+	if (data.here_doc > 0 || data.input > 0
+		|| data.inputop > 0 || data.outendop > 0)
+		open_in_and_outfile_bonus(&data);
+	// search_env_path(envp, &data);
+	// parsing_paths(envp[data.path_nbr], &data);
+	execute_cmds_bonus(data);
+	//freeall(data);
 	return (0);
 }
 
-void	execute_cmds_bonus(t_data data, char **envp)
+void	execute_cmds_bonus(t_data data)
 {
 	int	pfd[2];
 	int	i;
@@ -127,29 +124,24 @@ void	last_cmd(t_data data, char **cmd, int *pfd, char **envp)
 	}
 }
 
-void	open_in_and_outfile_bonus(int argc, char **argv, t_data *data)
+void	open_in_and_outfile_bonus(t_data *data)
 {
-	if (argc > 4)
+	if (data->input > 0)
 	{
-		if (ft_strncmp(argv[1], "here_doc", 8))
-		{
-			parsing_bonus(argc, argv, data);
-			check_for_empty_str(argc, argv, *data);
-			data->infile = open(data->files[0], O_RDONLY);
-			if (data->infile == -1)
-				error(ERROR_2, *data);
-		}
-		else
-		{
-			create_here_doc_file(argc, argv, data);
-			check_for_empty_str(argc, argv, *data);
-		}
-		data->outfile = open(data->files[1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-		if (data->outfile == -1)
+		//parsing_bonus(argc, argv, data);
+		//check_for_empty_str(argc, argv, *data);
+		data->infile = open(data->files[0], O_RDONLY);
+		if (data->infile == -1)
 			error(ERROR_2, *data);
 	}
 	else
-		error(ERROR_0, *data);
+	{
+		create_here_doc_file(argc, argv, data);
+		check_for_empty_str(argc, argv, *data);
+	}
+	data->outfile = open(data->files[1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (data->outfile == -1)
+		error(ERROR_2, *data);
 }
 
 void	parsing_bonus(int argc, char **argv, t_data *data)
