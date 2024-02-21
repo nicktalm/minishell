@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/21 09:50:32 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/21 10:52:17 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,19 @@ int	main(void)
 	data.outputop = 0;
 	data.here_doc = 0;
 	data.outendop = 0;
+	signal(SIGINT, ctrl_c);
 	while (1)
 	{
 		input = readline("\033[1;34mminishell > \033[0m");
 		data.input = split_with_q(input, ' ');
+		int	i = 0;
+		while (data.input[i])
+		{
+			printf("input = %s\n", data.input[i]);
+			i++;
+		}
 		check_for_operator(&data);
+		freeup(data.input);
 		free(input);
 	}
 	return (0);
@@ -125,6 +133,21 @@ void	exe_pwd(void)
 	}
 	printf("%s\n", cwd);
 	free(cwd);
+}
+
+void	exe_exit(void)
+{
+	// alles free, was allokiert wird
+	exit(0);
+}
+
+void	ctrl_c(int signal)
+{
+	signal = 0;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 void	exe_other(t_data data)
