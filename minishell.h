@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/20 18:20:29 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/27 11:24:47 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,32 @@
 
 typedef struct s_data
 {
-	char	**input;
-	char	**cmdpath;
-	int		pipe;
-	int		inputop;
-	int		outputop;
-	int		here_doc;
-	int		outendop;
+	char			**input;
+	char			**cmdpath;
+	int				pipe;
+	int				inputop;
+	int				infile;
+	int				outfile;
+	int				outputop;
+	int				here_doc;
+	int				outendop;
+	struct s_tree	**tree;
+	struct s_leaf	**leaf;
 }				t_data;
+
+typedef struct s_tree
+{
+	char	*opl;
+	void	*left;
+	char	*opr;
+	void	*right;
+}				t_tree;
+
+typedef struct s_leaf
+{
+	char	*input1;
+	char	*input2;
+}				t_leaf;
 
 // minishell
 
@@ -51,6 +69,8 @@ void	error(char *msg);
 void	exe_pwd(void);
 void	exe_cd(t_data data);
 void	check_for_operator(t_data *data);
+void	ctrl_c(int signal);
+void	exe_exit(void);
 
 // split_with_quotes
 
@@ -59,6 +79,22 @@ int		how_many_words(char const *s, char c);
 char	*wordlen(char const *s, char c, int *p);
 char	**freeup(char	**arr);
 char	*quotes(char *s, int *p, char quot);
+
+// parsing
+
+void	parsing(char *input);
+void	recursive_parsing(char **argv, int i, int t, int l, t_data *data);
+int		count_strs(char **argv);
+void	allocate_structs(char **argv, t_data *data);
+int		count_trees(char **argv);
+void	add_to_struct(char **argv, t_data *data, int i, int t, int l, char *op);
+
+// cmd_promt
+
+char	*print_promt(void);
+char	*promt_cwd(void);
+int		find_s(char *pwd);
+
 
 // Error
 
