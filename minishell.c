@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/21 10:52:17 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/27 11:25:13 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,9 @@ int	main(void)
 	signal(SIGINT, ctrl_c);
 	while (1)
 	{
-		input = readline("\033[1;34mminishell > \033[0m");
+		input = print_promt();
+		//parsing(input);
 		data.input = split_with_q(input, ' ');
-		int	i = 0;
-		while (data.input[i])
-		{
-			printf("input = %s\n", data.input[i]);
-			i++;
-		}
 		check_for_operator(&data);
 		freeup(data.input);
 		free(input);
@@ -93,10 +88,7 @@ void	execmd(t_data data)
 		//exe_env();
 	}
 	else if (!ft_strncmp(data.input[0], "exit", ft_strlen("exit")))
-	{
-		printf("exit\n");
-		//exe_exit();
-	}
+		exe_exit();
 	if (!ft_strncmp(data.input[0], "clear", ft_strlen("clear")))
 		printf("%s\n", tgetstr("clear", NULL));
 	else
@@ -162,11 +154,17 @@ void	exe_other(t_data data)
 	{
 		path = check_for_access(data, data.input);
 		if (!(path))
+		{
 			error(ERROR_8);
+			exit(0);
+		}
 		else
 		{
 			if (execve(path, data.input, data.cmdpath) == -1)
+			{
 				error(ERROR_4);
+				exit(0);
+			}
 		}
 	}
 	if (id > 0)

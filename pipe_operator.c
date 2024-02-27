@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 10:38:51 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/21 10:46:38 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/21 12:13:40 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,22 +126,55 @@ void	last_cmd(t_data data, char **cmd, int *pfd, char **envp)
 
 void	open_in_and_outfile_bonus(t_data *data)
 {
-	if (data->input > 0)
+	char	*result;
+
+	if (data->inputop > 0)
 	{
-		//parsing_bonus(argc, argv, data);
-		//check_for_empty_str(argc, argv, *data);
-		data->infile = open(data->files[0], O_RDONLY);
+		result = search_file(data->input, '<');
+		if (!result)
+			data->infile = STDIN_FILENO;
+		else
+			data->infile = open(result, O_RDONLY);
 		if (data->infile == -1)
-			error(ERROR_2, *data);
+			error(ERROR_2);
 	}
-	else
+	if (data->here_doc > 0)
+		create_here_doc_file(data);
+	if (data->outputop > 0)
 	{
-		create_here_doc_file(argc, argv, data);
-		check_for_empty_str(argc, argv, *data);
+		result = search_file(data->input, '>');
+		if (!result)
+			data->infile = STDOUT_FILENO;
+		else
+			data->infile = open(result, O_RDONLY);
+		if (data->infile == -1)
+			error(ERROR_2);
 	}
-	data->outfile = open(data->files[1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (data->outfile == -1)
-		error(ERROR_2, *data);
+	if (data->outendop > 0)
+		
+}
+
+char	*search_file(char **input, char op)
+{
+	int	i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == op)
+		{
+			if (op == '<<')
+				return (input[i + 1]);
+			else if (!access(input[i - 1], R_OK))
+				return (input[i - 1]);
+			else if (!access(input[i + 1], R_OK))
+				return (input[i + 1]);
+			else
+				return (NULL);
+		}
+		i++;
+	}
+	return (NULL);
 }
 
 void	parsing_bonus(int argc, char **argv, t_data *data)
@@ -172,18 +205,17 @@ void	parsing_bonus(int argc, char **argv, t_data *data)
 		error(ERROR_0, *data);
 }
 
-void	create_here_doc_file(int argc, char **argv, t_data *data)
+void	create_here_doc_file(t_data *data)
 {
 	int		file;
 	char	*str;
 	char	*tmp;
 
 	str = "";
-	parsing_here_doc(argc, argv, data);
 	file = open("here_doc.txt", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (file == -1)
-		error(ERROR_2, *data);
-	tmp = ft_strjoin(data->files[0], "\n");
+		error(ERROR_2);
+	tmp = ft_strjoin(search_file(data->input, '<<'), "\n");
 	while (str)
 	{
 		str = get_next_line(0);
@@ -197,7 +229,7 @@ void	create_here_doc_file(int argc, char **argv, t_data *data)
 	close(file);
 	data->infile = open("here_doc.txt", O_RDONLY);
 	if (data->infile == -1)
-		error(ERROR_2, *data);
+		error(ERROR_2);
 }
 
 void	parsing_here_doc(int argc, char **argv, t_data *data)
