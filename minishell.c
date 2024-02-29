@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/29 11:10:52 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/29 14:03:36 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(void)
 
 	path = getenv("PATH");
 	data.cmdpath = ft_split(path, ':');
-	//signal(SIGINT, ctrl_c);
+	signal(SIGINT, ctrl_c);
 	while (1)
 	{
 		input = print_prompt();
@@ -159,52 +159,52 @@ char	***tripple(char **newinput)
 // 		exe_other(data);
 // }
 
-// void	exe_cd(t_data data)
-// {
-// 	if (chdir(data.argv[1]))
-// 		error(ERROR_12);
-// }
+void	exe_cd(char *path)
+{
+	if (chdir(path))
+		error(ERROR_12);
+}
 
-// void	exe_pwd(void)
-// {
-// 	char	*cwd;
-// 	int		size;
+void	exe_pwd(void)
+{
+	char	*cwd;
+	int		size;
 
-// 	size = 1;
-// 	cwd = malloc(size * sizeof(char));
-// 	if (!cwd)
-// 		error(ERROR_1);
-// 	while (getcwd(cwd, size) == NULL)
-// 	{
-// 		if (errno == ERANGE)
-// 		{
-// 			size++;
-// 			free(cwd);
-// 			cwd = malloc(size * sizeof(char));
-// 			if (!cwd)
-// 				error(ERROR_1);
-// 		}
-// 		else
-// 			error(ERROR_11);
-// 	}
-// 	printf("%s\n", cwd);
-// 	free(cwd);
-// }
+	size = 1;
+	cwd = malloc(size * sizeof(char));
+	if (!cwd)
+		error(ERROR_1);
+	while (getcwd(cwd, size) == NULL)
+	{
+		if (errno == ERANGE)
+		{
+			size++;
+			free(cwd);
+			cwd = malloc(size * sizeof(char));
+			if (!cwd)
+				error(ERROR_1);
+		}
+		else
+			error(ERROR_11);
+	}
+	printf("%s\n", cwd);
+	free(cwd);
+}
 
-// void	exe_exit(void)
-// {
-// 	// alles free, was allokiert wird
-// 	exit(0);
-// }
+void	exe_exit(void)
+{
+	// alles free, was allokiert wird
+	exit(0);
+}
 
-// void	ctrl_c(int signal)
-// {
-// 	signal = 0;
-// 	printf("\n");
-// 	rl_on_new_line();
-// 	rl_replace_line("", 0);
-// 	rl_redisplay();
-// }
+void	ctrl_c(int signal)
+{
+	signal = 0;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
 void	exe_other(t_data *data, t_leaf *tree)
 {
@@ -234,9 +234,21 @@ void	exe_other(t_data *data, t_leaf *tree)
 	if (id > 0)
 	{
 		waitpid(0, NULL, 0);
-		close(data->fd);
-		if (dup2(data->save_fd, STDOUT_FILENO) == -1)
-			printf("error\n");
+		if (data->op)
+		{
+			if (!ft_strncmp(data->op, ">", ft_strlen(data->op)))
+			{
+				close(data->fd);
+				if (dup2(data->save_fd, STDOUT_FILENO) == -1)
+					printf("dup2 error\n");
+			}
+			else if (!ft_strncmp(data->op, "<", ft_strlen(data->op)))
+			{
+				close(data->fd);
+				if (dup2(data->save_fd, STDIN_FILENO) == -1)
+					printf("dup2 error\n");
+			}
+		}
 	}
 }
 

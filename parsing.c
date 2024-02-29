@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:09:50 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/29 11:08:13 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/29 14:04:20 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	recursive_parsing(int i, int t, int l, t_data *d)
 		add_to_struct(i, t, l, d);
 	else
 	{
-		printf("a\n");
+		//printf("a\n");
 		d->leaf[l]->input1 = d->argv[i];
 		if (i < count_strs(d->argv) - 1)
 		{
@@ -60,8 +60,9 @@ void	recursive_parsing(int i, int t, int l, t_data *d)
 			d->leaf[l]->input2 = NULL;
 		recursive_parsing(i - 1, t, l + 1, d);
 	}
-	printf("t = %i l = %i\n", t, l);
-	if (t == 0 && l == 0)
+	if (count_strs(d->argv) - 1 == 0)
+		return (exe_cmd(d->leaf[l], 0, d));
+	else if (t == 0 && l == 0)
 		return ;
 	else if (t == 0)
 		return (exe_cmd(d->leaf[l], 0, d));
@@ -73,7 +74,7 @@ void	recursive_parsing(int i, int t, int l, t_data *d)
 
 void	add_to_struct(int i, int t, int l, t_data *data)
 {
-	printf("%s\n", data->argv[i][0]);
+	//printf("%s\n", data->argv[i][0]);
 	data->tree[t]->op = data->argv[i][0];
 	if (t + 1 < count_trees(data->argv))
 		data->tree[t]->left = data->tree[t + 1];
@@ -146,10 +147,12 @@ int	count_strs(char ***argv)
 void	exe_cmd(void *tree, int i, t_data *data)
 {
 	t_tree	*t;
+	t_leaf	*l;
 
 	if (i == 1)
 	{
 		t = tree;
+		data->op = t->op;
 		if (t->left)
 		{
 			if (!ft_strncmp(t->op, "<", ft_strlen(t->op))
@@ -166,7 +169,19 @@ void	exe_cmd(void *tree, int i, t_data *data)
 		// }
 	}
 	else
-		exe_other(data, (t_leaf *)tree);
+	{
+		l = tree;
+		if (count_strs(data->argv) < 2)
+			data->op = NULL;
+		if (!ft_strncmp(l->input1[0], "cd", ft_strlen(l->input1[0])))
+			exe_cd(l->input1[1]);
+		else if (!ft_strncmp(l->input1[0], "pwd", ft_strlen(l->input1[0])))
+			exe_pwd();
+		else if (!ft_strncmp(l->input1[0], "exit", ft_strlen(l->input1[0])))
+			exe_exit();
+		else
+			exe_other(data, l);
+	}
 }
 
 void	exe_redir(t_tree *tree, t_data *data)
