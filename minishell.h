@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/29 10:41:03 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/29 14:00:37 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_data
 	struct s_leaf	**leaf;
 	int				fd;
 	int				save_fd;
+	char			*op;
 }				t_data;
 
 typedef struct s_tree
@@ -61,7 +62,7 @@ char	*check_for_access(t_data data, char **cmd);
 void	exe_other(t_data *data, t_leaf *tree);
 void	error(char *msg);
 void	exe_pwd(void);
-void	exe_cd(t_data data);
+void	exe_cd(char *path);
 //void	check_for_operator(t_data *data);
 void	ctrl_c(int signal);
 void	exe_exit(void);
