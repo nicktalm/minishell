@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_promt.c                                        :+:      :+:    :+:   */
+/*   cmd_prompt.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 11:16:37 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/27 11:43:04 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/27 14:01:48 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*print_promt(void)
+char	*print_prompt(void)
 {
 	char	*user;
 	char	*cwd;
@@ -21,15 +21,21 @@ char	*print_promt(void)
 	char	*tmp;
 
 	user = getenv("USER");
+	tmp = ft_strjoin("\033[1;34m", user);
+	user = ft_strjoin(tmp, "\033[0m");
+	free(tmp);
 	cwd = promt_cwd();
 	tmp = ft_substr(cwd, find_s(cwd), ft_strlen(cwd) - find_s(cwd));
 	free(cwd);
 	cwd = ft_strjoin(tmp, " ");
 	free(tmp);
-	tmp = ft_strjoin(user, "$ ");
-	free(user);
-	promt = ft_strjoin(cwd, tmp);
+	tmp = ft_strjoin("\033[1;32m", cwd);
+	free(cwd);
+	cwd = ft_strjoin(tmp, "\033[0m");
 	free(tmp);
+	user = ft_strjoin(user, "$ ");
+	promt = ft_strjoin(cwd, user);
+	free(user);
 	free(cwd);
 	input = readline(promt);
 	return (input);

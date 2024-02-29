@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/27 11:24:47 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/29 10:41:03 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,44 +33,40 @@
 
 typedef struct s_data
 {
-	char			**input;
+	char			***argv;
 	char			**cmdpath;
-	int				pipe;
-	int				inputop;
-	int				infile;
-	int				outfile;
-	int				outputop;
-	int				here_doc;
-	int				outendop;
 	struct s_tree	**tree;
 	struct s_leaf	**leaf;
+	int				fd;
+	int				save_fd;
 }				t_data;
 
 typedef struct s_tree
 {
-	char	*opl;
+	char	*op;
 	void	*left;
-	char	*opr;
 	void	*right;
 }				t_tree;
 
 typedef struct s_leaf
 {
-	char	*input1;
-	char	*input2;
+	char	**input1;
+	char	**input2;
 }				t_leaf;
 
 // minishell
 
 void	execmd(t_data data);
 char	*check_for_access(t_data data, char **cmd);
-void	exe_other(t_data data);
+void	exe_other(t_data *data, t_leaf *tree);
 void	error(char *msg);
 void	exe_pwd(void);
 void	exe_cd(t_data data);
-void	check_for_operator(t_data *data);
+//void	check_for_operator(t_data *data);
 void	ctrl_c(int signal);
 void	exe_exit(void);
+char	**sort_argv(char *input);
+char	***tripple(char **newinput);
 
 // split_with_quotes
 
@@ -82,16 +78,18 @@ char	*quotes(char *s, int *p, char quot);
 
 // parsing
 
-void	parsing(char *input);
-void	recursive_parsing(char **argv, int i, int t, int l, t_data *data);
-int		count_strs(char **argv);
-void	allocate_structs(char **argv, t_data *data);
-int		count_trees(char **argv);
-void	add_to_struct(char **argv, t_data *data, int i, int t, int l, char *op);
+void	parsing(t_data data);
+void	recursive_parsing(int i, int t, int l, t_data *d);
+int		count_strs(char ***argv);
+void	allocate_structs(t_data *data);
+int		count_trees(char ***argv);
+void	add_to_struct(int i, int t, int l, t_data *data);
+void	exe_cmd(void *tree, int i, t_data *data);
+void	exe_redir(t_tree *tree, t_data *data);
 
 // cmd_promt
 
-char	*print_promt(void);
+char	*print_prompt(void);
 char	*promt_cwd(void);
 int		find_s(char *pwd);
 
