@@ -6,91 +6,89 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:09:50 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/27 09:44:49 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/02/29 11:08:13 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parsing(char *input)
+void	parsing(t_data data)
 {
-	char	**argv;
-	t_data	data;
-	t_tree	*tree;
-	t_tree	*tree2;
 	int		i;
 	int		t;
 	int		l;
 
 	data.tree = NULL;
 	data.leaf = NULL;
-	argv = split_with_q(input, ' ');
-	allocate_structs(argv, &data);
-	i = count_strs(argv) - 1;
+	allocate_structs(&data);
+	i = count_strs(data.argv) - 1;
 	t = 0;
 	l = 0;
-	recursive_parsing(argv, i, t, l, &data);
-	tree = data.tree[0]->left;
-	printf("tree 0\n");
-	printf("opl = %s opr = %s\n", data.tree[0]->opl, data.tree[0]->opr);
-	printf("left = %s right = %s\n", tree->opl, data.tree[0]->right);
-	printf("tree 1\n");
-	printf("opl = %s opr = %s\n", tree->opl, tree->opr);
-	tree2 = tree->left;
-	printf("left = %s right = %s\n", tree2->opl, tree->right);
+	recursive_parsing(i, t, l, &data);
 }
 
-void	recursive_parsing(char **argv, int i, int t, int l, t_data *data)
+void	recursive_parsing(int i, int t, int l, t_data *d)
 {
 	if (i < 0)
 	{
-		printf("here\n");
-		data->tree[t - 1]->left = data->leaf[l - 1]->input1;
+		if (t > 0)
+			d->tree[t - 1]->left = d->leaf[l - 1];
 		return ;
 	}
-	else if (!ft_strncmp(argv[i], "|", ft_strlen(argv[i])))
-		add_to_struct(argv, data, i, t, l, "|");
-	else if (!ft_strncmp(argv[i], "<", ft_strlen(argv[i])))
-		add_to_struct(argv, data, i, t, l, "<");
-	else if (!ft_strncmp(argv[i], ">", ft_strlen(argv[i])))
-		add_to_struct(argv, data, i, t, l, ">");
-	else if (!ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
-		add_to_struct(argv, data, i, t, l, "<<");
-	else if (!ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
-		add_to_struct(argv, data, i, t, l, ">>");
+	else if (!ft_strncmp(d->argv[i][0], "|", ft_strlen(d->argv[i][0])))
+		add_to_struct(i, t, l, d);
+	else if (!ft_strncmp(d->argv[i][0], "<", ft_strlen(d->argv[i][0])))
+		add_to_struct(i, t, l, d);
+	else if (!ft_strncmp(d->argv[i][0], ">", ft_strlen(d->argv[i][0])))
+		add_to_struct(i, t, l, d);
+	else if (!ft_strncmp(d->argv[i][0], "<<", ft_strlen(d->argv[i][0])))
+		add_to_struct(i, t, l, d);
+	else if (!ft_strncmp(d->argv[i][0], ">>", ft_strlen(d->argv[i][0])))
+		add_to_struct(i, t, l, d);
 	else
 	{
 		printf("a\n");
-		data->leaf[l]->input1 = argv[i];
-		if (i > 1)
-			data->leaf[l]->input2 = argv[i - 2];
-		recursive_parsing(argv, i - 1, t, l + 1, data);
+		d->leaf[l]->input1 = d->argv[i];
+		if (i < count_strs(d->argv) - 1)
+		{
+			if (!ft_strncmp(d->argv[i + 1][0], "|", ft_strlen(d->argv[i + 1][0])))
+				d->leaf[l]->input2 = d->argv[i + 1];
+			else
+				d->leaf[l]->input2 = d->argv[i + 2];
+		}
+		else
+			d->leaf[l]->input2 = NULL;
+		recursive_parsing(i - 1, t, l + 1, d);
 	}
-	return ;
-}
-
-void	add_to_struct(char **argv, t_data *data, int i, int t, int l, char *op)
-{
-	printf("%s\n", op);
-	data->tree[t]->opl = op;
-	if (t > 0)
-		data->tree[t]->opr = data->tree[t - 1]->opl;
+	printf("t = %i l = %i\n", t, l);
+	if (t == 0 && l == 0)
+		return ;
+	else if (t == 0)
+		return (exe_cmd(d->leaf[l], 0, d));
 	else
-		data->tree[t]->opr = NULL;
-	if (t + 1 < count_trees(argv))
-		data->tree[t]->left = data->tree[t + 1];
-	data->tree[t]->right = data->leaf[l - 1]->input1;
-	recursive_parsing(argv, i - 1, t + 1, l, data);
+	{
+		return (exe_cmd(d->tree[t - 1], 1, d));
+	}
 }
 
-void	allocate_structs(char **argv, t_data *data)
+void	add_to_struct(int i, int t, int l, t_data *data)
+{
+	printf("%s\n", data->argv[i][0]);
+	data->tree[t]->op = data->argv[i][0];
+	if (t + 1 < count_trees(data->argv))
+		data->tree[t]->left = data->tree[t + 1];
+	data->tree[t]->right = data->leaf[l - 1];
+	recursive_parsing(i - 1, t + 1, l, data);
+}
+
+void	allocate_structs(t_data *data)
 {
 	int	trees;
 	int	leafs;
 	int	i;
 
-	trees = count_trees(argv);
-	leafs = count_strs(argv) - trees;
+	trees = count_trees(data->argv);
+	leafs = count_strs(data->argv) - trees;
 	data->tree = (t_tree **)malloc (trees * sizeof(t_tree *));
 	if (!data->tree)
 		printf("error trees\n");
@@ -115,7 +113,7 @@ void	allocate_structs(char **argv, t_data *data)
 	}
 }
 
-int	count_trees(char **argv)
+int	count_trees(char ***argv)
 {
 	int	i;
 	int	trees;
@@ -124,18 +122,18 @@ int	count_trees(char **argv)
 	trees = 0;
 	while (argv[i])
 	{
-		if (!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
+		if (!ft_strncmp(argv[i][0], "|", ft_strlen(argv[i][0]))
+			|| !ft_strncmp(argv[i][0], "<", ft_strlen(argv[i][0]))
+			|| !ft_strncmp(argv[i][0], ">", ft_strlen(argv[i][0]))
+			|| !ft_strncmp(argv[i][0], "<<", ft_strlen(argv[i][0]))
+			|| !ft_strncmp(argv[i][0], ">>", ft_strlen(argv[i][0])))
 			trees++;
 		i++;
 	}
 	return (trees);
 }
 
-int	count_strs(char **argv)
+int	count_strs(char ***argv)
 {
 	int	i;
 
@@ -145,20 +143,53 @@ int	count_strs(char **argv)
 	return (i);
 }
 
-// void	exe_cmd(t_tree *tree)
-// {
-// 	if (tree->left)
-// 	{
-// 		if (!ft_strncmp(tree->opl, "<", ft_strlen(tree->opl))
-// 			|| !ft_strncmp(tree->opl, ">", ft_strlen(tree->opl))
-// 			|| !ft_strncmp(tree->opl, "<<", ft_strlen(tree->opl))
-// 			|| !ft_strncmp(tree->opl, ">>", ft_strlen(tree->opl)))
-// 			exe_redir(tree);
-// 		else
-// 			exe_pipe();
-// 	}
-// 	else
-// 	{
-		
-// 	}
-// }
+void	exe_cmd(void *tree, int i, t_data *data)
+{
+	t_tree	*t;
+
+	if (i == 1)
+	{
+		t = tree;
+		if (t->left)
+		{
+			if (!ft_strncmp(t->op, "<", ft_strlen(t->op))
+				|| !ft_strncmp(t->op, ">", ft_strlen(t->op))
+				|| !ft_strncmp(t->op, "<<", ft_strlen(t->op))
+				|| !ft_strncmp(t->op, ">>", ft_strlen(t->op)))
+				exe_redir(t, data);
+			// else
+			// 	exe_pipe();
+		}
+		// else
+		// {
+				
+		// }
+	}
+	else
+		exe_other(data, (t_leaf *)tree);
+}
+
+void	exe_redir(t_tree *tree, t_data *data)
+{
+	t_leaf	*leaf;
+
+	leaf = tree->left;
+	if (!ft_strncmp(tree->op, ">", ft_strlen(tree->op)))
+	{
+		data->fd = open(leaf->input2[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		data->save_fd = dup(STDOUT_FILENO);
+		if (data->save_fd == -1)
+			printf("error fd\n");
+		if (dup2(data->fd, STDOUT_FILENO) == -1)
+			printf("error\n");
+	}
+	else if (!ft_strncmp(tree->op, "<", ft_strlen(tree->op)))
+	{
+		data->fd = open(leaf->input2[0], O_RDONLY);
+		data->save_fd = dup(STDIN_FILENO);
+		if (data->save_fd == -1)
+			printf("error fd\n");
+		if (dup2(data->fd, STDIN_FILENO) == -1)
+			printf("error\n");
+	}
+}
