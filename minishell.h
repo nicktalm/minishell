@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/29 14:00:37 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/05 10:51:48 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*quotes(char *s, int *p, char quot);
 
 // parsing
 
-void	parsing(t_data data);
+//void	parsing(t_data data);
 void	recursive_parsing(int i, int t, int l, t_data *d);
 int		count_strs(char ***argv);
 void	allocate_structs(t_data *data);
