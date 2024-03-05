@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/29 14:03:36 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/05 10:23:08 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,18 @@ int	main(void)
 		input = print_prompt();
 		newinput = sort_argv(input);
 		data.argv = tripple(newinput);
+		int	i = 0;
+		int	j = 0;
+		while (data.argv[i])
+		{
+			j = 0;
+			while (data.argv[i][j])
+			{
+				printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
+				j++;
+			}
+			i++;
+		}
 		parsing(data);
 		//exit(0);
 		//check_for_operator(&data);
