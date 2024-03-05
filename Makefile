@@ -4,7 +4,8 @@ LDFLAGS = -lreadline -lncurses -fsanitize=address
 SRCS = minishell.c \
 		split_with_quotes.c \
 		parsing.c \
-		cmd_prompt.c
+		cmd_prompt.c \
+		new_parsing.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
 INLIBFT = -L $(PATHLIBFT) -lft

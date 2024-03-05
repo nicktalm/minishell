@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 10:23:08 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/05 18:21:35 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,17 @@ int	main(void)
 	t_data	data;
 	char	*input;
 	char	*path;
-	char	**newinput;
+	//char	**newinput;
 
 	path = getenv("PATH");
 	data.cmdpath = ft_split(path, ':');
-	signal(SIGINT, ctrl_c);
+	//signal(SIGINT, ctrl_c);
 	while (1)
 	{
 		input = print_prompt();
-		newinput = sort_argv(input);
-		data.argv = tripple(newinput);
+		parsing(input, &data);
+		//newinput = sort_argv(input);
+		//data.argv = tripple(newinput);
 		int	i = 0;
 		int	j = 0;
 		while (data.argv[i])
@@ -39,7 +40,7 @@ int	main(void)
 			}
 			i++;
 		}
-		parsing(data);
+		parsing_tree(data);
 		//exit(0);
 		//check_for_operator(&data);
 		//freeup(data.argv);
@@ -209,14 +210,14 @@ void	exe_exit(void)
 	exit(0);
 }
 
-void	ctrl_c(int signal)
-{
-	signal = 0;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+// void	ctrl_c(int signal)
+// {
+// 	signal = 0;
+// 	printf("\n");
+// 	rl_on_new_line();
+// 	rl_replace_line("", 0);
+// 	rl_redisplay();
+// }
 
 void	exe_other(t_data *data, t_leaf *tree)
 {

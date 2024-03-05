@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:09:50 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/29 14:04:20 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/05 18:20:58 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parsing(t_data data)
+void	parsing_tree(t_data data)
 {
 	int		i;
 	int		t;
