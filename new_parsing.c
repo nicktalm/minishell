@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   new_parsing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 14:55:58 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 12:51:30 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/05 18:23:37 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int		count_argv(char **argv);
-int		check_for_token(char *argv);
 
 void	parsing(char *input, t_data *data)
 {
@@ -29,17 +26,10 @@ void	parsing(char *input, t_data *data)
 	start = i;
 	argv = split_with_q(input, ' ');
 	count = count_argv(argv);
-	printf("count = %i\n", count);
 	data->argv = (char ***)malloc ((count + 1) * sizeof(char **));
 	if (!data->argv)
 		printf("error argv\n");
 	data->argv[count] = NULL;
-	while (argv[i])
-	{
-		printf("argv[%i] = %s\n", i, argv[i]);
-		i++;
-	}
-	i = 0;
 	while (argv[i])
 	{
 		if (!check_for_token(argv[i]))
@@ -51,13 +41,18 @@ void	parsing(char *input, t_data *data)
 		else
 		{
 			start = i;
-			while (argv[i])
+			if (!check_for_cmd(data, argv[i]))
 			{
-				if (check_for_token(argv[i]))
-					i++;
-				else
-					break ;
+				while (argv[i])
+				{
+					if (check_for_token(argv[i]))
+						i++;
+					else
+						break ;
+				}
 			}
+			else
+				i++;
 			new = (char **)malloc ((i - (start - 1)) * sizeof(char *));
 			if (!new)
 				printf("error new\n");
@@ -88,6 +83,29 @@ int	check_for_token(char *argv)
 	return (1);
 }
 
+int	check_for_cmd(t_data *data, char *argv)
+{
+	int		i;
+	char	*cmd;
+	char	*tmp;
+
+	i = 0;
+	while (data->cmdpath[i])
+	{
+		tmp = ft_strjoin(data->cmdpath[i], "/");
+		cmd = ft_strjoin(tmp, argv);
+		free(tmp);
+		if (access(cmd, F_OK | X_OK) != -1)
+		{
+			free(cmd);
+			return (0);
+		}
+		free(cmd);
+		i++;
+	}
+	return (1);
+}
+
 int	count_argv(char **argv)
 {
 	int	i;
@@ -108,24 +126,27 @@ int	count_argv(char **argv)
 	return (count + 1);
 }
 
-int	main(void)
-{
-	char	*cmd;
-	t_data	data;
+// int	main(void)
+// {
+// 	char	*cmd;
+// 	t_data	data;
+// 	char	*path;
 
-	cmd = "cat > ls -la";
-	parsing(cmd, &data);
-	int	i = 0;
-	int	j = 0;
-	while (data.argv[i])
-	{
-		j = 0;
-		while (data.argv[i][j])
-		{
-			printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
-			j++;
-		}
-		i++;
-	}
-	return (0);
-}
+// 	cmd = "< infile cat | ls -la | wc -w > outfile";
+// 	path = getenv("PATH");
+// 	data.cmdpath = ft_split(path, ':');
+// 	parsing(cmd, &data);
+// 	int	i = 0;
+// 	int	j = 0;
+// 	while (data.argv[i])
+// 	{
+// 		j = 0;
+// 		while (data.argv[i][j])
+// 		{
+// 			printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// 	return (0);
+// }

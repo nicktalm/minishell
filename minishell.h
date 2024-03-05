@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 10:51:48 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/05 18:21:21 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*quotes(char *s, int *p, char quot);
 
 // parsing
 
-//void	parsing(t_data data);
+void	parsing_tree(t_data data);
 void	recursive_parsing(int i, int t, int l, t_data *d);
 int		count_strs(char ***argv);
 void	allocate_structs(t_data *data);
@@ -93,6 +93,13 @@ void	exe_redir(t_tree *tree, t_data *data);
 char	*print_prompt(void);
 char	*promt_cwd(void);
 int		find_s(char *pwd);
+
+// new_parsing
+
+int		count_argv(char **argv);
+int		check_for_token(char *argv);
+int		check_for_cmd(t_data *data, char *argv);
+void	parsing(char *input, t_data *data);
 
 
 // Error
