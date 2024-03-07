@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 11:16:37 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/27 14:01:48 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/06 10:20:30 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ char	*print_prompt(void)
 	free(cwd);
 	cwd = ft_strjoin(tmp, "\033[0m");
 	free(tmp);
-	user = ft_strjoin(user, "$ ");
-	promt = ft_strjoin(cwd, user);
+	tmp = ft_strjoin(user, "$ ");
 	free(user);
+	promt = ft_strjoin(cwd, tmp);
+	free(tmp);
 	free(cwd);
 	input = readline(promt);
+	free(promt);
 	return (input);
 }
 

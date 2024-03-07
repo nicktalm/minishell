@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_parsing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 14:55:58 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 18:23:37 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:43:28 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	parsing(char *input, t_data *data)
 {
-	char	**argv;
+	char	**new_input;
 	char	**new;
 	int		i;
 	int		a;
@@ -24,28 +24,31 @@ void	parsing(char *input, t_data *data)
 	i = 0;
 	a = 0;
 	start = i;
-	argv = split_with_q(input, ' ');
-	count = count_argv(argv);
+	new_input = split_with_q(input, ' ');
+	free(input);
+	count = count_argv(new_input);
 	data->argv = (char ***)malloc ((count + 1) * sizeof(char **));
 	if (!data->argv)
 		printf("error argv\n");
+	printf("parsing count = %i\n", count);
+	return ;
 	data->argv[count] = NULL;
-	while (argv[i])
+	while (new_input[i])
 	{
-		if (!check_for_token(argv[i]))
+		if (!check_for_token(new_input, i, data))
 		{
-			data->argv[a] = split_with_q(argv[i], ' ');
+			data->argv[a] = split_with_q(new_input[i], ' ');
 			a++;
 			i++;
 		}
 		else
 		{
 			start = i;
-			if (!check_for_cmd(data, argv[i]))
+			if (!check_for_cmd(data, new_input[i]))
 			{
-				while (argv[i])
+				while (new_input[i])
 				{
-					if (check_for_token(argv[i]))
+					if (check_for_token(new_input, i, data))
 						i++;
 					else
 						break ;
@@ -60,7 +63,7 @@ void	parsing(char *input, t_data *data)
 			count = 0;
 			while (start < i)
 			{
-				new[count] = ft_strdup(argv[start]);
+				new[count] = ft_strdup(new_input[start]);
 				count++;
 				start++;
 			}
@@ -68,17 +71,19 @@ void	parsing(char *input, t_data *data)
 			a++;
 		}
 	}
+	freeup(new_input);
 }
 
-int	check_for_token(char *argv)
+int	check_for_token(char **argv, int i, t_data *data)
 {
-	if (!ft_strncmp(argv, "|", ft_strlen(argv))
-		|| !ft_strncmp(argv, "<", ft_strlen(argv))
-		|| !ft_strncmp(argv, ">", ft_strlen(argv))
-		|| !ft_strncmp(argv, "<<", ft_strlen(argv))
-		|| !ft_strncmp(argv, ">>", ft_strlen(argv)))
+	if (!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
+		|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
+		|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
+		|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
+		|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
 		return (0);
-	else if (access(argv, F_OK | R_OK) != -1)
+	else if (access(argv[i], F_OK | R_OK) != -1
+		&& check_for_cmd(data, argv[i - 1]))
 		return (0);
 	return (1);
 }
@@ -115,38 +120,50 @@ int	count_argv(char **argv)
 	count = 0;
 	while (argv[i])
 	{
-		if (!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
-			|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
+		if ((!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
+			&& i > 0)
 			count += 2;
+		else if ((!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
+			&& i == 0)
+			count++;
 		i++;
 	}
 	return (count + 1);
 }
 
-// int	main(void)
-// {
-// 	char	*cmd;
-// 	t_data	data;
-// 	char	*path;
+int	count_argv(char **argv, t_data *data)
+{
+	int	i;
+	int	count;
 
-// 	cmd = "< infile cat | ls -la | wc -w > outfile";
-// 	path = getenv("PATH");
-// 	data.cmdpath = ft_split(path, ':');
-// 	parsing(cmd, &data);
-// 	int	i = 0;
-// 	int	j = 0;
-// 	while (data.argv[i])
-// 	{
-// 		j = 0;
-// 		while (data.argv[i][j])
-// 		{
-// 			printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
+	i = 0;
+	count = 0;
+	while (argv[i])
+	{
+		if ((!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
+			&& i > 0)
+			count == 2;
+		else if ((!ft_strncmp(argv[i], "|", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], "<<", ft_strlen(argv[i]))
+				|| !ft_strncmp(argv[i], ">>", ft_strlen(argv[i])))
+			&& i == 0)
+			count++;
+		else if (!check_for_cmd(data, argv[i]))
+			count++;
+		i++;
+	}
+}

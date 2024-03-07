@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 18:21:21 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/07 15:14:27 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_data
 	int				fd;
 	int				save_fd;
 	char			*op;
+	int				cd;
 }				t_data;
 
 typedef struct s_tree
@@ -57,7 +58,7 @@ typedef struct s_leaf
 
 // minishell
 
-void	execmd(t_data data);
+// void	execmd(t_data data);
 char	*check_for_access(t_data data, char **cmd);
 void	exe_other(t_data *data, t_leaf *tree);
 void	error(char *msg);
@@ -66,8 +67,10 @@ void	exe_cd(char *path);
 //void	check_for_operator(t_data *data);
 void	ctrl_c(int signal);
 void	exe_exit(void);
-char	**sort_argv(char *input);
-char	***tripple(char **newinput);
+// char	**sort_argv(char *input);
+// char	***tripple(char **newinput);
+void	freetripple(char ***argv);
+
 
 // split_with_quotes
 
@@ -97,10 +100,14 @@ int		find_s(char *pwd);
 // new_parsing
 
 int		count_argv(char **argv);
-int		check_for_token(char *argv);
+int		check_for_token(char **argv, int i, t_data *data);
 int		check_for_cmd(t_data *data, char *argv);
 void	parsing(char *input, t_data *data);
 
+// CFG
+
+void	create_cmd_table(t_data *data);
+void	fill_cmd_table(char ***argv, char ***cmd_table, int i, int *pos, t_data *data);
 
 // Error
 

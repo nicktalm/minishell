@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:09:50 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 18:20:58 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/06 18:10:16 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	recursive_parsing(int i, int t, int l, t_data *d)
 		add_to_struct(i, t, l, d);
 	else
 	{
-		//printf("a\n");
 		d->leaf[l]->input1 = d->argv[i];
 		if (i < count_strs(d->argv) - 1)
 		{
@@ -60,6 +59,10 @@ void	recursive_parsing(int i, int t, int l, t_data *d)
 			d->leaf[l]->input2 = NULL;
 		recursive_parsing(i - 1, t, l + 1, d);
 	}
+	// if (t < count_trees(d->argv))
+	// 	exe_tree(d->tree[t], t, d);
+	// else
+	// 	return ;
 	if (count_strs(d->argv) - 1 == 0)
 		return (exe_cmd(d->leaf[l], 0, d));
 	else if (t == 0 && l == 0)
@@ -74,7 +77,6 @@ void	recursive_parsing(int i, int t, int l, t_data *d)
 
 void	add_to_struct(int i, int t, int l, t_data *data)
 {
-	//printf("%s\n", data->argv[i][0]);
 	data->tree[t]->op = data->argv[i][0];
 	if (t + 1 < count_trees(data->argv))
 		data->tree[t]->left = data->tree[t + 1];

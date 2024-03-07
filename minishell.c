@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/05 18:21:35 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:24:55 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	main(void)
 	t_data	data;
 	char	*input;
 	char	*path;
-	//char	**newinput;
 
 	path = getenv("PATH");
 	data.cmdpath = ft_split(path, ':');
@@ -26,117 +25,115 @@ int	main(void)
 	{
 		input = print_prompt();
 		parsing(input, &data);
-		//newinput = sort_argv(input);
-		//data.argv = tripple(newinput);
-		int	i = 0;
-		int	j = 0;
-		while (data.argv[i])
-		{
-			j = 0;
-			while (data.argv[i][j])
-			{
-				printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
-				j++;
-			}
-			i++;
-		}
-		parsing_tree(data);
-		//exit(0);
-		//check_for_operator(&data);
-		//freeup(data.argv);
-		//free(input);
+		// int	i = 0;
+		// int	j = 0;
+		// while (data.argv[i])
+		// {
+		// 	j = 0;
+		// 	while (data.argv[i][j])
+		// 	{
+		// 		printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
+		// 		j++;
+		// 	}
+		// 	i++;
+		// }
+		// if (!ft_strncmp(data.argv[0][0], "clear", ft_strlen("clear")))
+		// 	printf("%s\n", tgetstr("clear", NULL));
+		// create_cmd_table(&data);
+		// //parsing_tree(data);
+		// freetripple(data.argv);
 	}
 	return (0);
 }
 
-char	**sort_argv(char *input)
-{
-	int		i;
-	int		end;
-	int		start;
-	int		count;
-	char	**newinput;
+// char	**sort_argv(char *input)
+// {
+// 	int		i;
+// 	int		end;
+// 	int		start;
+// 	int		count;
+// 	char	**newinput;
 
-	i = 0;
-	start = 0;
-	end = 0;
-	count = 0;
-	while (input[i])
-	{
-		if (input[i] == '|' || input[i] == '<'
-			|| input[i] == '>' || (input[i] == '<' && input[i + 1] == '<')
-			|| (input[i] == '>' && input[i + 1] == '>'))
-			count += 2;
-		i++;
-	}
-	count++;
-	newinput = (char **)malloc ((count + 1) * sizeof(char *));
-	if (!newinput)
-		printf("error\n");
-	newinput[count] = NULL;
-	count = 0;
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '|' || input[i] == '<'
-			|| input[i] == '>' || (input[i] == '<' && input[i + 1] == '<')
-			|| (input[i] == '>' && input[i + 1] == '>'))
-		{
-			end = i;
-			printf("i = %i\n", i);
-			newinput[count] = ft_substr(input, start, end - start);
-			count++;
-			if (input[i] == '|' || (input[i] == '<' && input[i + 1] != '<')
-				|| (input[i] == '>' && input[i + 1] != '>'))
-			{
-				if (input[i] == '|')
-					newinput[count] = ft_strdup("|");
-				else if (input[i] == '<')
-					newinput[count] = ft_strdup("<");
-				else
-					newinput[count] = ft_strdup(">");
-			}
-			else
-			{
-				if (input[i] == '<')
-					newinput[count] = ft_strdup("<<");
-				else
-					newinput[count] = ft_strdup(">>");
-			}
-			count++;
-			start = end + 1;
-		}
-		i++;
-	}
-	end = i;
-	if (!input[i])
-		newinput[count] = ft_substr(input, start, end - start);
-	free(input);
-	return (newinput);
-}
+// 	i = 0;
+// 	start = 0;
+// 	end = 0;
+// 	count = 0;
+// 	while (input[i])
+// 	{
+// 		if (input[i] == '|' || input[i] == '<'
+// 			|| input[i] == '>' || (input[i] == '<' && input[i + 1] == '<')
+// 			|| (input[i] == '>' && input[i + 1] == '>'))
+// 			count += 2;
+// 		i++;
+// 	}
+// 	count++;
+// 	newinput = (char **)malloc ((count + 1) * sizeof(char *));
+// 	if (!newinput)
+// 		printf("error\n");
+// 	newinput[count] = NULL;
+// 	count = 0;
+// 	i = 0;
+// 	while (input[i])
+// 	{
+// 		if (input[i] == '|' || input[i] == '<'
+// 			|| input[i] == '>' || (input[i] == '<' && input[i + 1] == '<')
+// 			|| (input[i] == '>' && input[i + 1] == '>'))
+// 		{
+// 			end = i;
+// 			printf("i = %i\n", i);
+// 			newinput[count] = ft_substr(input, start, end - start);
+// 			count++;
+// 			if (input[i] == '|' || (input[i] == '<' && input[i + 1] != '<')
+// 				|| (input[i] == '>' && input[i + 1] != '>'))
+// 			{
+// 				if (input[i] == '|')
+// 					newinput[count] = ft_strdup("|");
+// 				else if (input[i] == '<')
+// 					newinput[count] = ft_strdup("<");
+// 				else
+// 					newinput[count] = ft_strdup(">");
+// 			}
+// 			else
+// 			{
+// 				if (input[i] == '<')
+// 					newinput[count] = ft_strdup("<<");
+// 				else
+// 					newinput[count] = ft_strdup(">>");
+// 			}
+// 			count++;
+// 			start = end + 1;
+// 		}
+// 		i++;
+// 	}
+// 	end = i;
+// 	if (!input[i])
+// 		newinput[count] = ft_substr(input, start, end - start);
+// 	free(input);
+// 	return (newinput);
+// }
 
-char	***tripple(char **newinput)
-{
-	char	***tripple;
-	int		i;
+// char	***tripple(char **newinput)
+// {
+// 	char	***tripple;
+// 	int		i;
 
-	i = 0;
-	while (newinput[i])
-		i++;
-	tripple = (char ***)malloc ((i + 1) * sizeof(char **));
-	if (!tripple)
-		printf("error\n");
-	tripple[i] = NULL;
-	i = 0;
-	while (newinput[i])
-	{
-		tripple[i] = split_with_q(newinput[i], ' ');
-		free(newinput[i]);
-		i++;
-	}
-	free(newinput);
-	return (tripple);
-}
+// 	i = 0;
+// 	while (newinput[i])
+// 		i++;
+// 	tripple = (char ***)malloc ((i + 1) * sizeof(char **));
+// 	if (!tripple)
+// 		printf("error\n");
+// 	tripple[i] = NULL;
+// 	i = 0;
+// 	while (newinput[i])
+// 	{
+// 		tripple[i] = split_with_q(newinput[i], ' ');
+// 		free(newinput[i]);
+// 		i++;
+// 	}
+// 	free(newinput);
+// 	return (tripple);
+// }
 
 // void	execmd(t_data data)
 // {
@@ -290,5 +287,27 @@ char	*check_for_access(t_data data, char **cmd)
 
 void	error(char *msg)
 {
-	perror(msg);
+	printf("msg = %s\n", msg);
+	//perror(msg);
+	perror(strerror(errno));
+}
+
+void	freetripple(char ***argv)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (argv[i])
+	{
+		j = 0;
+		while (argv[i][j])
+		{
+			free(argv[i][j]);
+			j++;
+		}
+		free(argv[i]);
+		i++;
+	}
+	free(argv);
 }
