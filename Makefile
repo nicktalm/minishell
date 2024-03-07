@@ -5,7 +5,8 @@ SRCS = minishell.c \
 		split_with_quotes.c \
 		parsing.c \
 		cmd_prompt.c \
-		new_parsing.c
+		new_parsing.c \
+		CFG.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
 INLIBFT = -L $(PATHLIBFT) -lft
