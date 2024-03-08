@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/07 15:14:27 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/08 17:34:37 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_data
 {
 	char			***argv;
 	char			**cmdpath;
+	struct s_token	*lst;
 	struct s_tree	**tree;
 	struct s_leaf	**leaf;
 	int				fd;
@@ -55,6 +56,13 @@ typedef struct s_leaf
 	char	**input1;
 	char	**input2;
 }				t_leaf;
+
+typedef struct s_token
+{
+	char			*token;
+	char			*input;
+	struct s_token	*next;
+}				t_token;
 
 // minishell
 
@@ -108,6 +116,28 @@ void	parsing(char *input, t_data *data);
 
 void	create_cmd_table(t_data *data);
 void	fill_cmd_table(char ***argv, char ***cmd_table, int i, int *pos, t_data *data);
+
+// quotes
+
+char	*check_for_quotes(char *input);
+void	double_or_single(int *d, int *s, char quote, int *first);
+char	*wait_for_input(char quote, char *input);
+
+// new_CFG
+
+void	create_tokens(char *input, t_token **lst);
+int		ft_isop(int op);
+int		check_after_cmd(char *str, char *input, int i);
+
+// token_struct
+
+void	fill_lst(char *token, char *input, t_token **lst);
+t_token	*create_new_node(char *t, char *i);
+void	add_to_lst(t_token **lst, t_token *new);
+
+// test
+
+void	test(t_token *lst);
 
 // Error
 

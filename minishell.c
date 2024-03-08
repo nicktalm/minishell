@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/07 16:24:55 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/08 19:43:14 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,19 @@ int	main(void)
 {
 	t_data	data;
 	char	*input;
-	char	*path;
+	t_token	*lst;
 
-	path = getenv("PATH");
-	data.cmdpath = ft_split(path, ':');
+	lst = NULL;
+	data.cmdpath = ft_split(getenv("PATH"), ':');
 	//signal(SIGINT, ctrl_c);
 	while (1)
 	{
 		input = print_prompt();
-		parsing(input, &data);
+		input = check_for_quotes(input);
+		create_tokens(input, &lst);
+		test(lst);
+		execute_cmd(&lst);
+		//parsing(input, &data);
 		// int	i = 0;
 		// int	j = 0;
 		// while (data.argv[i])
@@ -44,6 +48,16 @@ int	main(void)
 		// freetripple(data.argv);
 	}
 	return (0);
+}
+
+void	test(t_token *lst)
+{
+	while (lst)
+	{
+		printf("token = %s\n", lst->token);
+		printf("input = %s\n", lst->input);
+		lst = lst->next;
+	}
 }
 
 // char	**sort_argv(char *input)
