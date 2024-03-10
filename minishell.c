@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/08 19:43:14 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/09 16:17:23 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(void)
 		input = check_for_quotes(input);
 		create_tokens(input, &lst);
 		test(lst);
-		execute_cmd(&lst);
+		execute_cmd(&lst, data);
 		//parsing(input, &data);
 		// int	i = 0;
 		// int	j = 0;
@@ -302,7 +302,6 @@ char	*check_for_access(t_data data, char **cmd)
 void	error(char *msg)
 {
 	printf("msg = %s\n", msg);
-	//perror(msg);
 	perror(strerror(errno));
 }
 

@@ -3,14 +3,9 @@ CFLAGS = -Wall -Werror -Wextra
 LDFLAGS = -lreadline -lncurses -fsanitize=address
 SRCS = minishell.c \
 		split_with_quotes.c \
-		parsing.c \
 		cmd_prompt.c \
-		new_parsing.c \
-		CFG.c \
 		quotes.c \
-		new_CFG.c \
-		token_struct.c \
-		execution.c
+		token.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
 INLIBFT = -L $(PATHLIBFT) -lft
