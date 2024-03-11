@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 10:38:51 by lbohm             #+#    #+#             */
-/*   Updated: 2024/02/21 12:13:40 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:11:26 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,29 @@ int	exe_pipe(t_data data)
 	return (0);
 }
 
-void	execute_cmds_bonus(t_data data)
+void	exe_pipe(t_data *data, t_pipe *p)
 {
-	int	pfd[2];
-	int	i;
+	int		pfd[2];
+	int		i;
+	t_exe	*cmd;
+	t_exe	*cmd2;
 
 	i = 0;
+	cmd = (t_exe *)p.left;
+	cmd2 = (t_exe *)p.right;
 	if (pipe(pfd) == -1)
-		error(ERROR_5, data);
-	first_cmd_bonus(data, data.cmd[i], pfd, envp);
-	i++;
-	while (data.cmd[i + 1])
-	{
-		next_cmd(data, data.cmd[i], envp);
-		i++;
-	}
-	last_cmd(data, data.cmd[i], pfd, envp);
+		printf("error\n");
+	first_cmd_bonus(data, cmd.argv, pfd, data->cmd_path);
+	// i++;
+	// while (data.cmd[i + 1])
+	// {
+	// 	next_cmd(data, data.cmd[i], envp);
+	// 	i++;
+	// }
+	last_cmd(data, cmd.argv, pfd, data->cmd_path);
 }
 
-void	first_cmd_bonus(t_data data, char **cmd, int *pfd, char **envp)
+void	first_cmd_bonus(t_data *data, char **cmd, int *pfd, char **envp)
 {
 	pid_t	pid;
 	int		status;
@@ -69,33 +73,33 @@ void	first_cmd_bonus(t_data data, char **cmd, int *pfd, char **envp)
 	}
 }
 
-void	next_cmd(t_data data, char **cmd, char **envp)
-{
-	int	pid;
-	int	status;
-	int	pfd2[2];
+// void	next_cmd(t_data data, char **cmd, char **envp)
+// {
+// 	int	pid;
+// 	int	status;
+// 	int	pfd2[2];
 
-	if (pipe(pfd2) == -1)
-		error(ERROR_5, data);
-	pid = fork();
-	if (pid == -1)
-		error(ERROR_6, data);
-	if (pid == 0)
-	{
-		close(pfd2[0]);
-		if (dup2(pfd2[1], STDOUT_FILENO) == -1)
-			error(ERROR_3, data);
-		child_process(data, cmd, envp);
-	}
-	else
-	{
-		if (waitpid(0, &status, 0) == -1)
-			error(ERROR_9, data);
-		close(pfd2[1]);
-		if (dup2(pfd2[0], STDIN_FILENO) == -1)
-			error(ERROR_3, data);
-	}
-}
+// 	if (pipe(pfd2) == -1)
+// 		error(ERROR_5, data);
+// 	pid = fork();
+// 	if (pid == -1)
+// 		error(ERROR_6, data);
+// 	if (pid == 0)
+// 	{
+// 		close(pfd2[0]);
+// 		if (dup2(pfd2[1], STDOUT_FILENO) == -1)
+// 			error(ERROR_3, data);
+// 		child_process(data, cmd, envp);
+// 	}
+// 	else
+// 	{
+// 		if (waitpid(0, &status, 0) == -1)
+// 			error(ERROR_9, data);
+// 		close(pfd2[1]);
+// 		if (dup2(pfd2[0], STDIN_FILENO) == -1)
+// 			error(ERROR_3, data);
+// 	}
+// }
 
 void	last_cmd(t_data data, char **cmd, int *pfd, char **envp)
 {

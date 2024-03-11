@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/10 22:39:29 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/11 16:17:37 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct s_redir
 {
 	int				type;
 	char			*file;
-	char			*efile;
 	int				mode;
 	int				fd;
 	struct s_cmd	*cmd;
@@ -64,13 +63,14 @@ typedef struct s_exe
 {
 	int		type;
 	char	**argv;
-	char	**eargv;
 }				t_exe;
 
 // minishell
 
 int		main(void);
 void	error(char *msg);
+void	exe_other(t_data *data, t_cmd *cmd);
+char	*check_for_access(t_data data, char **cmd);
 
 // split_with_quotes
 
@@ -94,8 +94,35 @@ char	*wait_for_input(char quote, char *input);
 
 // token
 
-void	token(char *input);
+void	token(char *input, t_data *data);
 char	get_token(char **s, char *e, char **q, char **eq);
+int		check_next(char *s, char token);
+
+// fill_struct
+
+t_cmd	*fill_exe(char **q, char **eq, char *input, char **s);
+t_cmd	*fill_pipe(t_cmd *left, t_cmd *right);
+t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input);
+char	**alloc_struct(char **s);
+
+// execute
+
+void	exe_execve(t_data *data, t_exe *cmd);
+char	*check_for_access(t_data data, char **cmd);
+void	exe_pipe(t_data *data, t_pipe *p);
+void	exe_execve_2(t_data *data, t_exe *cmd);
+void	first_cmd_bonus(t_data *data, t_exe *cmd, int *pfd);
+void	last_cmd(t_data *data, t_exe *cmd, int *pfd);
+
+// test
+
+void	test(t_cmd *t);
+
+// struct nbr
+
+# define EXECVE 0
+# define PIPE 1
+# define REDIR 2
 
 // Error
 
