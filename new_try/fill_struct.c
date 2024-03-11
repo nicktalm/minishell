@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 22:20:47 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/11 16:43:12 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:22:33 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,35 +20,31 @@ t_cmd	*fill_exe(char **q, char **eq, char *input, char **s)
 
 	i = 0;
 	e = input + ft_strlen(input);
-	cmd = (t_exe *)malloc (sizeof(cmd));
+	cmd = (t_exe *)malloc (sizeof(t_exe));
 	if (!cmd)
 		printf("error\n");
 	cmd->type = EXECVE;
 	cmd->argv = alloc_struct(s);
 	cmd->argv[i] = ft_substr(input, ft_strlen(input) - ft_strlen(*q), *eq - *q);
-	printf("argv[%i] = %s\n", i, cmd->argv[i]);
 	while (check_next(*s, 'a'))
 	{
 		i++;
 		get_token(s, e, q, eq);
 		cmd->argv[i] = ft_substr(input, ft_strlen(input) - ft_strlen(*q), *eq - *q);
-		printf("argv[%i] = %s\n", i, cmd->argv[i]);
 	}
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*fill_pipe(t_cmd *left, t_cmd *right)
+t_cmd	*fill_pipe(t_cmd *l, t_cmd *r)
 {
 	t_pipe	*cmd;
 
-	cmd = (t_pipe *)malloc (sizeof(cmd));
+	cmd = (t_pipe *)malloc (sizeof(t_pipe));
 	if (!cmd)
 		printf("error\n");
 	cmd->type = PIPE;
-	printf("type left = %i\n", left->type);
-	printf("type right = %i\n", right->type);
-	cmd->left = left;
-	cmd->right = right;
+	cmd->left = l;
+	cmd->right = r;
 	return ((t_cmd *)cmd);
 }
 
@@ -58,7 +54,7 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input)
 	char	*e;
 
 	e = *s + ft_strlen(input);
-	cmd = (t_redir *)malloc (sizeof(cmd));
+	cmd = (t_redir *)malloc (sizeof(t_redir));
 	if (!cmd)
 		printf("error\n");
 	cmd->type = REDIR;

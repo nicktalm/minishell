@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/11 16:17:37 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:07:13 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int		check_next(char *s, char token);
 // fill_struct
 
 t_cmd	*fill_exe(char **q, char **eq, char *input, char **s);
-t_cmd	*fill_pipe(t_cmd *left, t_cmd *right);
+t_cmd	*fill_pipe(t_cmd *l, t_cmd *r);
 t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input);
 char	**alloc_struct(char **s);
 
