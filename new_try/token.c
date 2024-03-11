@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:11:20 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/11 16:47:01 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:11:53 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ char	get_token(char **s, char *e, char **q, char **eq)
 		if (**s == '<')
 			ret = '-';
 	}
+	else if (**s == *e)
+		return (0);
 	else
 		ret = 'a';
 	while (!ft_strchr(isspace, **s) && **s != *e)
