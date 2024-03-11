@@ -5,7 +5,9 @@ SRCS = minishell.c \
 		split_with_quotes.c \
 		cmd_prompt.c \
 		quotes.c \
-		token.c
+		token.c \
+		fill_struct.c \
+		execute.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
 INLIBFT = -L $(PATHLIBFT) -lft
