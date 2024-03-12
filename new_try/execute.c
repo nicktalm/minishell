@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/12 17:28:21 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 19:58:13 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,11 @@ void	exe_execve_2(t_data *data, t_exe *cmd)
 void	exe_pipe(t_data *data, t_pipe *p)
 {
 	int		pfd[2];
-	int		i;
+	// int		i;
 	t_exe	*cmd;
 	t_exe	*cmd2;
 
-	i = 0;
+	// i = 0;
 	cmd = (t_exe *)p->left;
 	cmd2 = (t_exe *)p->right;
 	if (pipe(pfd) == -1)
