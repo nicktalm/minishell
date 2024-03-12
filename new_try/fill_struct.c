@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 22:20:47 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/12 11:23:01 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 11:33:40 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_cmd	*fill_pipe(t_cmd *l, t_cmd *r)
 	cmd = (t_pipe *)malloc (sizeof(t_pipe));
 	if (!cmd)
 		printf("error\n");
-	printf("r = %i\n", r->type);
 	cmd->type = PIPE;
 	cmd->left = l;
 	cmd->right = r;

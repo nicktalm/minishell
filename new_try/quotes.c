@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 10:28:27 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/08 12:20:41 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 16:58:37 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*check_for_quotes(char *input)
 		else if (single_q == 1 && first == 115)
 			return (wait_for_input(39, input));
 	}
-	return (input);
+	return (clean_input(input));
 }
 
 void	double_or_single(int *d, int *s, char quote, int *first)
@@ -86,5 +86,36 @@ char	*wait_for_input(char quote, char *input)
 		free(tmp);
 	}
 	free(rest);
-	return (new_input);
+	return (clean_input(new_input));
+}
+
+char	*clean_input(char *input)
+{
+	int	i;
+	int	d_q;
+	int	s_q;
+
+	d_q = 0;
+	s_q = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$' && s_q == 0)
+			input = check_env(input, i + 1);
+		else if (input[i] == '"' && s_q == 0)
+			clean_input_2(input, i, &d_q);
+		else if (input[i] == 39 && d_q == 0)
+			clean_input_2(input, i, &s_q);
+		i++;
+	}
+	return (input);
+}
+
+void	clean_input_2(char *input, int i, int *quote)
+{
+	if (*quote == 1)
+		*quote = 0;
+	else
+		*quote = 1;
+	input[i] = ' ';
 }

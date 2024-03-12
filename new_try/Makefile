@@ -5,6 +5,7 @@ SRCS = minishell.c \
 		split_with_quotes.c \
 		cmd_prompt.c \
 		quotes.c \
+		quotes_2.c \
 		token.c \
 		fill_struct.c \
 		execute.c
