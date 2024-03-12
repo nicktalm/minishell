@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/11 17:07:13 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 11:18:05 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	*wait_for_input(char quote, char *input);
 // token
 
 void	token(char *input, t_data *data);
-char	get_token(char **s, char *e, char **q, char **eq);
+char	get_token(char **s, char **q, char **eq);
 int		check_next(char *s, char token);
 
 // fill_struct
@@ -103,7 +103,8 @@ int		check_next(char *s, char token);
 t_cmd	*fill_exe(char **q, char **eq, char *input, char **s);
 t_cmd	*fill_pipe(t_cmd *l, t_cmd *r);
 t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input);
-char	**alloc_struct(char **s);
+char	**alloc_argv(char **s);
+void	check_for_mode(t_redir **cmd, char **q);
 
 // execute
 
