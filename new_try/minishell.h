@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/12 17:27:19 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 20:27:17 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ t_cmd	*fill_pipe(t_cmd *l, t_cmd *r);
 t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input);
 char	**alloc_argv(char **s);
 void	check_for_mode(t_redir **cmd, char **q);
+t_cmd	*cat_struct(t_cmd *f, t_cmd *s);
+int		count_argvs(char **argv);
 
 // execute
 

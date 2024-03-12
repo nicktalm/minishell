@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 22:20:47 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/12 11:33:40 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 20:36:56 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,13 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input)
 	check_for_mode(&cmd, q);
 	get_token(s, q, eq);
 	cmd->file = ft_substr(input, ft_strlen(input) - ft_strlen(*q), *eq - *q);
-	if (c)
+	if (c && check_next(*s, 'a'))
+	{
+		printf("here\n");
+		get_token(s, q, eq);
+		cmd->cmd = cat_struct(c, fill_exe(q, eq, input, s));
+	}
+	else if (c)
 		cmd->cmd = c;
 	else
 	{
@@ -106,4 +112,55 @@ void	check_for_mode(t_redir **cmd, char **q)
 		(*cmd)->mode = O_RDONLY;
 		(*cmd)->fd = 0;
 	}
+}
+
+t_cmd	*cat_struct(t_cmd *f, t_cmd *s)
+{
+	t_exe	*first;
+	t_exe	*second;
+	t_exe	*new;
+	int		i;
+	int		pos;
+
+	i = 0;
+	first = (t_exe *)f;
+	second = (t_exe *)s;
+	pos = count_argvs(first->argv) + count_argvs(second->argv);
+	new = (t_exe *)malloc (sizeof(t_exe));
+	if (!new)
+		printf("error\n");
+	new->argv = (char **)malloc ((pos + 1) * sizeof(char *));
+	if (!new->argv)
+		printf("error\n");
+	new->argv[pos] = NULL;
+	new->type = EXECVE;
+	pos = 0;
+	while (first->argv[i])
+	{
+		new->argv[pos] = ft_strdup(first->argv[i]);
+		i++;
+		pos++;
+	}
+	i = 0;
+	while (second->argv[i])
+	{
+		new->argv[pos] = ft_strdup(second->argv[i]);
+		i++;
+		pos++;
+	}
+	freeup(first->argv);
+	freeup(second->argv);
+	free(first);
+	free(second);
+	return ((t_cmd *)new);
+}
+
+int	count_argvs(char **argv)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i])
+		i++;
+	return (i);
 }

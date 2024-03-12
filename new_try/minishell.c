@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/12 17:28:43 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 20:03:59 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ void	test(t_cmd *t, t_data *data)
 	if (t->type == EXECVE)
 	{
 		cmd = (t_exe *)t;
-		// while (cmd->argv[i])
-		// {
-		// 	printf("test argv[%i] = \033[1;33m %s \033[0m ", i, cmd->argv[i]);
-		// 	i++;
-		// }
-		// printf("\n");
-		exe_execve(data, cmd);
+		while (cmd->argv[i])
+		{
+			printf("test argv[%i] = \033[1;33m %s \033[0m ", i, cmd->argv[i]);
+			i++;
+		}
+		printf("\n");
+		//exe_execve(data, cmd);
 		return ;
 	}
 	else if (t->type == PIPE)
