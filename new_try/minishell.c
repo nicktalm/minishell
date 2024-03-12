@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/12 09:27:18 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 17:28:43 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(void)
 		if (ft_strncmp(input, "", ft_strlen(input)))
 		{
 			token(input, &data);
-			test(data.start_node);
+			test(data.start_node, &data);
 			//exe_other(&data, data.start_node);
 			free(input);
 		}
@@ -56,7 +56,7 @@ void	error(char *msg)
 	perror(msg);
 }
 
-void	test(t_cmd *t)
+void	test(t_cmd *t, t_data *data)
 {
 	t_exe	*cmd;
 	t_pipe	*cmd1;
@@ -70,19 +70,20 @@ void	test(t_cmd *t)
 	if (t->type == EXECVE)
 	{
 		cmd = (t_exe *)t;
-		while (cmd->argv[i])
-		{
-			printf("test argv[%i] = \033[1;33m %s \033[0m ", i, cmd->argv[i]);
-			i++;
-		}
-		printf("\n");
+		// while (cmd->argv[i])
+		// {
+		// 	printf("test argv[%i] = \033[1;33m %s \033[0m ", i, cmd->argv[i]);
+		// 	i++;
+		// }
+		// printf("\n");
+		exe_execve(data, cmd);
 		return ;
 	}
 	else if (t->type == PIPE)
 	{
 		cmd1 = (t_pipe *)t;
-		test(cmd1->left);
-		test(cmd1->right);
+		test(cmd1->left, data);
+		test(cmd1->right, data);
 	}
 	else if (t->type == REDIR)
 	{
@@ -90,6 +91,6 @@ void	test(t_cmd *t)
 		printf("file = %s\n", cmd2->file);
 		printf("mode = %i\n", cmd2->mode);
 		printf("fd = %i\n", cmd2->fd);
-		test(cmd2->cmd);
+		test(cmd2->cmd, data);
 	}
 }

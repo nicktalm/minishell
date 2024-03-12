@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/11 14:36:48 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 17:28:21 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*check_for_access(t_data data, char **cmd)
 		tmp = ft_strjoin(data.cmd_path[i], "/");
 		newpath = ft_strjoin(tmp, cmd[0]);
 		free(tmp);
-		printf("newpath = %s\n", newpath);
+		//printf("newpath = %s\n", newpath);
 		if (access(newpath, X_OK) == -1)
 		{
 			i++;

@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/12 11:18:05 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/12 17:27:19 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,13 @@ int		find_s(char *pwd);
 char	*check_for_quotes(char *input);
 void	double_or_single(int *d, int *s, char quote, int *first);
 char	*wait_for_input(char quote, char *input);
+char	*clean_input(char *input);
+void	clean_input_2(char *input, int i, int *quote);
+
+// quotes_2
+
+char	*check_env_2(char *ret, char *input, int start, int end);
+char	*check_env(char *input, int i);
 
 // token
 
@@ -117,7 +124,7 @@ void	last_cmd(t_data *data, t_exe *cmd, int *pfd);
 
 // test
 
-void	test(t_cmd *t);
+void	test(t_cmd *t, t_data *data);
 
 // struct nbr
 
