@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 11:16:37 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/13 12:58:20 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/13 13:34:13 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,32 @@ char	*print_prompt(void)
 	char	*tmp;
 
 	user = getenv("USER");
-	tmp = ft_strjoin("\001\e[1;34m\002", user);
-	user = ft_strjoin(tmp, "\001\e[0m\002");
-	free(tmp);
+	tmp = free_used_string("\001\e[1;34m\002", user, 0, 0);
+	user = free_used_string(tmp, "\001\e[0m\002", 1, 0);
 	cwd = prompt_cwd();
 	tmp = ft_substr(cwd, find_s(cwd), ft_strlen(cwd) - find_s(cwd));
 	free(cwd);
-	cwd = ft_strjoin(tmp, " ");
-	free(tmp);
-	tmp = ft_strjoin("\001\e[1;32m\002", cwd);
-	free(cwd);
-	cwd = ft_strjoin(tmp, "\001\e[0m\002");
-	free(tmp);
-	tmp = ft_strjoin(user, "$ ");
-	free(user);
-	prompt = ft_strjoin(cwd, tmp);
-	free(tmp);
-	free(cwd);
+	cwd = free_used_string(tmp, " ", 1, 0);
+	tmp = free_used_string("\001\e[1;32m\002", cwd, 0, 1);
+	cwd = free_used_string(tmp, "\001\e[0m\002", 1, 0);
+	tmp = free_used_string(user, "$ ", 1, 0);
+	prompt = free_used_string(cwd, tmp, 1, 1);
 	input = readline(prompt);
 	free(prompt);
 	add_history(input);
 	return (input);
+}
+
+char	*free_used_string(char *f, char *s, int ff, int sf)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(f, s);
+	if (ff == 1)
+		free(f);
+	if (sf == 1)
+		free(s);
+	return (tmp);
 }
 
 char	*prompt_cwd(void)

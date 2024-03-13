@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:11:20 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/12 11:33:23 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/13 17:33:39 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	token(char *input, t_data *data)
 	s = input;
 	q = NULL;
 	eq = NULL;
-	data->start_node = NULL;
+	data->s_n = NULL;
 	while (*s)
 	{
 		token = get_token(&s, &q, &eq);
@@ -31,19 +31,19 @@ void	token(char *input, t_data *data)
 			if (check_next(s, 'a'))
 			{
 				get_token(&s, &q, &eq);
-				data->start_node = fill_pipe(data->start_node, fill_exe(&q, &eq, input, &s));
+				data->s_n = fill_pipe(data->s_n, fill_exe(&q, &eq, input, &s));
 			}
 		}
 		else if (token == '>')
-			data->start_node = fill_redir(&s, &q, &eq, data->start_node, input);
+			data->s_n = fill_redir(&s, &q, &eq, data);
 		else if (token == '<')
-			data->start_node = fill_redir(&s, &q, &eq, data->start_node, input);
+			data->s_n = fill_redir(&s, &q, &eq, data);
 		else if (token == '+')
-			data->start_node = fill_redir(&s, &q, &eq, data->start_node, input);
+			data->s_n = fill_redir(&s, &q, &eq, data);
 		else if (token == '-')
-			data->start_node = fill_redir(&s, &q, &eq, data->start_node, input);
+			data->s_n = fill_here_doc(&s, &q, &eq, data);
 		else if (token == 'a')
-			data->start_node = fill_exe(&q, &eq, input, &s);
+			data->s_n = fill_exe(&q, &eq, input, &s);
 	}
 }
 

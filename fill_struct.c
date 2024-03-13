@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 22:20:47 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/13 09:46:06 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/13 17:40:26 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_cmd	*fill_pipe(t_cmd *l, t_cmd *r)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input)
+t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 {
 	t_redir	*cmd;
 
@@ -56,18 +56,50 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input)
 	cmd->type = REDIR;
 	check_for_mode(&cmd, q);
 	get_token(s, q, eq);
-	cmd->file = ft_substr(input, ft_strlen(input) - ft_strlen(*q), *eq - *q);
-	if (c && check_next(*s, 'a'))
+	cmd->f = ft_substr(data->in, ft_strlen(data->in) - ft_strlen(*q), *eq - *q);
+	if (data->s_n && check_next(*s, 'a'))
 	{
 		get_token(s, q, eq);
-		cmd->cmd = cat_struct(c, fill_exe(q, eq, input, s));
+		cmd->cmd = cat_struct(data->s_n, fill_exe(q, eq, data->in, s));
 	}
-	else if (c)
-		cmd->cmd = c;
+	else if (data->s_n)
+		cmd->cmd = data->s_n;
+	else if (check_next(*s, 'a'))
+	{
+		get_token(s, q, eq);
+		cmd->cmd = fill_exe(q, eq, data->in, s);
+	}
 	else
+		cmd->cmd = NULL;
+	return ((t_cmd *)cmd);
+}
+
+t_cmd	*fill_here_doc(char **s, char **q, char **eq, t_data *data)
+{
+	t_here_doc	*cmd;
+	char		*tmp;
+
+	cmd = (t_here_doc *)malloc (sizeof(t_here_doc));
+	if (!cmd)
+		printf("error\n");
+	cmd->type = HERE;
+	get_token(s, q, eq);
+	tmp = ft_substr(data->in, ft_strlen(data->in) - ft_strlen(*q), *eq - *q);
+	cmd->l = ft_strjoin(tmp, "\n");
+	free(tmp);
+	if (data->s_n && check_next(*s, 'a'))
 	{
 		get_token(s, q, eq);
-		cmd->cmd = fill_exe(q, eq, input, s);
+		cmd->cmd = cat_struct(data->s_n, fill_exe(q, eq, data->in, s));
 	}
+	else if (data->s_n)
+		cmd->cmd = data->s_n;
+	else if (check_next(*s, 'a'))
+	{
+		get_token(s, q, eq);
+		cmd->cmd = fill_exe(q, eq, data->in, s);
+	}
+	else
+		cmd->cmd = NULL;
 	return ((t_cmd *)cmd);
 }
