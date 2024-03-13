@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 11:16:37 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/06 10:20:30 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/13 12:58:20 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,34 +16,35 @@ char	*print_prompt(void)
 {
 	char	*user;
 	char	*cwd;
-	char	*promt;
+	char	*prompt;
 	char	*input;
 	char	*tmp;
 
 	user = getenv("USER");
-	tmp = ft_strjoin("\033[1;34m", user);
-	user = ft_strjoin(tmp, "\033[0m");
+	tmp = ft_strjoin("\001\e[1;34m\002", user);
+	user = ft_strjoin(tmp, "\001\e[0m\002");
 	free(tmp);
-	cwd = promt_cwd();
+	cwd = prompt_cwd();
 	tmp = ft_substr(cwd, find_s(cwd), ft_strlen(cwd) - find_s(cwd));
 	free(cwd);
 	cwd = ft_strjoin(tmp, " ");
 	free(tmp);
-	tmp = ft_strjoin("\033[1;32m", cwd);
+	tmp = ft_strjoin("\001\e[1;32m\002", cwd);
 	free(cwd);
-	cwd = ft_strjoin(tmp, "\033[0m");
+	cwd = ft_strjoin(tmp, "\001\e[0m\002");
 	free(tmp);
 	tmp = ft_strjoin(user, "$ ");
 	free(user);
-	promt = ft_strjoin(cwd, tmp);
+	prompt = ft_strjoin(cwd, tmp);
 	free(tmp);
 	free(cwd);
-	input = readline(promt);
-	free(promt);
+	input = readline(prompt);
+	free(prompt);
+	add_history(input);
 	return (input);
 }
 
-char	*promt_cwd(void)
+char	*prompt_cwd(void)
 {
 	char	*cwd;
 	int		size;

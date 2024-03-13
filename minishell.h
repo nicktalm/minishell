@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/09 16:15:10 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/13 12:04:51 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,52 +34,41 @@
 
 typedef struct s_data
 {
-	char			***argv;
-	char			**cmdpath;
-	struct s_token	*lst;
-	struct s_tree	**tree;
-	struct s_leaf	**leaf;
-	int				fd;
-	int				save_fd;
-	char			*op;
-	int				cd;
+	char			**cmd_path;
+	struct s_cmd	*start_node;
 }				t_data;
 
-typedef struct s_tree
+typedef struct s_cmd
 {
-	char	*op;
-	void	*left;
-	void	*right;
-}				t_tree;
+	int	type;
+}				t_cmd;
 
-typedef struct s_leaf
+typedef struct s_pipe
 {
-	char	**input1;
-	char	**input2;
-}				t_leaf;
+	int				type;
+	struct s_cmd	*left;
+	struct s_cmd	*right;
+}				t_pipe;
 
-typedef struct s_token
+typedef struct s_redir
 {
-	char			*token;
-	char			*input;
-	struct s_token	*next;
-}				t_token;
+	int				type;
+	char			*file;
+	int				mode;
+	int				fd;
+	struct s_cmd	*cmd;
+}				t_redir;
+
+typedef struct s_exe
+{
+	int		type;
+	char	**argv;
+}				t_exe;
 
 // minishell
 
-// void	execmd(t_data data);
-char	*check_for_access(t_data data, char **cmd);
-void	exe_other(t_data *data, t_leaf *tree);
+int		main(void);
 void	error(char *msg);
-void	exe_pwd(void);
-void	exe_cd(char *path);
-//void	check_for_operator(t_data *data);
-void	ctrl_c(int signal);
-void	exe_exit(void);
-// char	**sort_argv(char *input);
-// char	***tripple(char **newinput);
-void	freetripple(char ***argv);
-
 
 // split_with_quotes
 
@@ -89,61 +78,69 @@ char	*wordlen(char const *s, char c, int *p);
 char	**freeup(char	**arr);
 char	*quotes(char *s, int *p, char quot);
 
-// parsing
-
-void	parsing_tree(t_data data);
-void	recursive_parsing(int i, int t, int l, t_data *d);
-int		count_strs(char ***argv);
-void	allocate_structs(t_data *data);
-int		count_trees(char ***argv);
-void	add_to_struct(int i, int t, int l, t_data *data);
-void	exe_cmd(void *tree, int i, t_data *data);
-void	exe_redir(t_tree *tree, t_data *data);
-
-// cmd_promt
+// cmd_prompt
 
 char	*print_prompt(void);
-char	*promt_cwd(void);
+char	*prompt_cwd(void);
 int		find_s(char *pwd);
-
-// new_parsing
-
-int		count_argv(char **argv);
-int		check_for_token(char **argv, int i, t_data *data);
-int		check_for_cmd(t_data *data, char *argv);
-void	parsing(char *input, t_data *data);
-
-// CFG
-
-void	create_cmd_table(t_data *data);
-void	fill_cmd_table(char ***argv, char ***cmd_table, int i, int *pos, t_data *data);
 
 // quotes
 
 char	*check_for_quotes(char *input);
 void	double_or_single(int *d, int *s, char quote, int *first);
 char	*wait_for_input(char quote, char *input);
+char	*clean_input(char *input);
+void	clean_input_2(char *input, int i, int *quote);
 
-// new_CFG
+// quotes_2
 
-void	create_tokens(char *input, t_token **lst);
-int		ft_isop(int op);
-int		check_after_cmd(char *str, char *input, int i);
+char	*check_env_2(char *ret, char *input, int start, int end);
+char	*check_env(char *input, int i);
 
-// token_struct
+// token
 
-void	fill_lst(char *token, char *input, t_token **lst);
-t_token	*create_new_node(char *t, char *i);
-void	add_to_lst(t_token **lst, t_token *new);
+void	token(char *input, t_data *data);
+char	get_token(char **s, char **q, char **eq);
+int		check_next(char *s, char token);
+
+// fill_struct
+
+t_cmd	*fill_exe(char **q, char **eq, char *input, char **s);
+t_cmd	*fill_pipe(t_cmd *l, t_cmd *r);
+t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input);
+
+
+// fill_struct_utils
+
+char	**alloc_argv(char **s);
+void	check_for_mode(t_redir **cmd, char **q);
+char	**cat_struct_2(char **first, char **second, char **new);
+t_cmd	*cat_struct(t_cmd *f, t_cmd *s);
+int		count_argvs(char **argv);
+
+// execute
+
+void	exe_execve(t_data *data, t_exe *cmd);
+char	*check_for_access(t_data data, char **cmd);
+void	exe_redir(t_data *data, t_redir *cmd);
+void	exe_pipe(t_data *data, t_pipe *cmd);
+
+// builtins
+
+void	exe_cd(char *path);
+void	exe_pwd(void);
+void	exe_exit(void);
+void	ctrl_c(int signal);
 
 // test
 
-void	test(t_token *lst);
+void	test(t_cmd *t, t_data *data);
 
-// execution
+// struct nbr
 
-void	execute_cmd(t_token **lst, t_data data);
-void	exe_other_test(t_data data, char **cmd_argv);
+# define EXECVE 0
+# define PIPE 1
+# define REDIR 2
 
 // Error
 
