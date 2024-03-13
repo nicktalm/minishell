@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/13 12:05:51 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/13 13:17:50 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ void	exe_pwd(void)
 
 void	exe_exit(void)
 {
-	// alles free, was allokiert wird
-	printf("here\n");
 	exit(0);
 }
 

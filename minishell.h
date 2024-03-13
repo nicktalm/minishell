@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/13 12:04:51 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/13 17:34:23 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,15 @@
 # include <term.h>
 # include <errno.h>
 # include "./lib/libft/libft.h"
+# include "./lib/get_next_line/get_next_line.h"
 
 // struct
 
 typedef struct s_data
 {
 	char			**cmd_path;
-	struct s_cmd	*start_node;
+	struct s_cmd	*s_n;
+	char			*in;
 }				t_data;
 
 typedef struct s_cmd
@@ -53,7 +55,7 @@ typedef struct s_pipe
 typedef struct s_redir
 {
 	int				type;
-	char			*file;
+	char			*f;
 	int				mode;
 	int				fd;
 	struct s_cmd	*cmd;
@@ -65,24 +67,25 @@ typedef struct s_exe
 	char	**argv;
 }				t_exe;
 
+typedef struct s_here_doc
+{
+	int				type;
+	char			*l;
+	struct s_cmd	*cmd;
+}				t_here_doc;
+
 // minishell
 
 int		main(void);
 void	error(char *msg);
-
-// split_with_quotes
-
-char	**split_with_q(char const *s, char c);
-int		how_many_words(char const *s, char c);
-char	*wordlen(char const *s, char c, int *p);
-char	**freeup(char	**arr);
-char	*quotes(char *s, int *p, char quot);
+void	execute_cmd(t_cmd *t, t_data *data);
 
 // cmd_prompt
 
 char	*print_prompt(void);
 char	*prompt_cwd(void);
 int		find_s(char *pwd);
+char	*free_used_string(char *f, char *s, int ff, int sf);
 
 // quotes
 
@@ -107,8 +110,8 @@ int		check_next(char *s, char token);
 
 t_cmd	*fill_exe(char **q, char **eq, char *input, char **s);
 t_cmd	*fill_pipe(t_cmd *l, t_cmd *r);
-t_cmd	*fill_redir(char **s, char **q, char **eq, t_cmd *c, char *input);
-
+t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data);
+t_cmd	*fill_here_doc(char **s, char **q, char **eq, t_data *data);
 
 // fill_struct_utils
 
@@ -124,6 +127,8 @@ void	exe_execve(t_data *data, t_exe *cmd);
 char	*check_for_access(t_data data, char **cmd);
 void	exe_redir(t_data *data, t_redir *cmd);
 void	exe_pipe(t_data *data, t_pipe *cmd);
+void	first_cmd(int *pfd, int id, t_pipe *cmd, t_data *data);
+void	exe_here_doc(t_data *data, t_here_doc *cmd);
 
 // builtins
 
@@ -132,15 +137,16 @@ void	exe_pwd(void);
 void	exe_exit(void);
 void	ctrl_c(int signal);
 
-// test
+// free
 
-void	test(t_cmd *t, t_data *data);
+char	**freeup(char	**arr);
 
 // struct nbr
 
 # define EXECVE 0
 # define PIPE 1
 # define REDIR 2
+# define HERE 3
 
 // Error
 
