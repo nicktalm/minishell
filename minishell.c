@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 11:23:40 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/09 16:17:23 by lucabohn         ###   ########.fr       */
+/*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
+/*   Updated: 2024/03/13 12:09:53 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,311 +16,57 @@ int	main(void)
 {
 	t_data	data;
 	char	*input;
-	t_token	*lst;
+	pid_t	id;
 
-	lst = NULL;
-	data.cmdpath = ft_split(getenv("PATH"), ':');
-	//signal(SIGINT, ctrl_c);
+	data.cmd_path = ft_split(getenv("PATH"), ':');
 	while (1)
 	{
 		input = print_prompt();
 		input = check_for_quotes(input);
-		create_tokens(input, &lst);
-		test(lst);
-		execute_cmd(&lst, data);
-		//parsing(input, &data);
-		// int	i = 0;
-		// int	j = 0;
-		// while (data.argv[i])
-		// {
-		// 	j = 0;
-		// 	while (data.argv[i][j])
-		// 	{
-		// 		printf("data.argv[%i][%i] = %s\n", i, j, data.argv[i][j]);
-		// 		j++;
-		// 	}
-		// 	i++;
-		// }
-		// if (!ft_strncmp(data.argv[0][0], "clear", ft_strlen("clear")))
-		// 	printf("%s\n", tgetstr("clear", NULL));
-		// create_cmd_table(&data);
-		// //parsing_tree(data);
-		// freetripple(data.argv);
-	}
-	return (0);
-}
-
-void	test(t_token *lst)
-{
-	while (lst)
-	{
-		printf("token = %s\n", lst->token);
-		printf("input = %s\n", lst->input);
-		lst = lst->next;
-	}
-}
-
-// char	**sort_argv(char *input)
-// {
-// 	int		i;
-// 	int		end;
-// 	int		start;
-// 	int		count;
-// 	char	**newinput;
-
-// 	i = 0;
-// 	start = 0;
-// 	end = 0;
-// 	count = 0;
-// 	while (input[i])
-// 	{
-// 		if (input[i] == '|' || input[i] == '<'
-// 			|| input[i] == '>' || (input[i] == '<' && input[i + 1] == '<')
-// 			|| (input[i] == '>' && input[i + 1] == '>'))
-// 			count += 2;
-// 		i++;
-// 	}
-// 	count++;
-// 	newinput = (char **)malloc ((count + 1) * sizeof(char *));
-// 	if (!newinput)
-// 		printf("error\n");
-// 	newinput[count] = NULL;
-// 	count = 0;
-// 	i = 0;
-// 	while (input[i])
-// 	{
-// 		if (input[i] == '|' || input[i] == '<'
-// 			|| input[i] == '>' || (input[i] == '<' && input[i + 1] == '<')
-// 			|| (input[i] == '>' && input[i + 1] == '>'))
-// 		{
-// 			end = i;
-// 			printf("i = %i\n", i);
-// 			newinput[count] = ft_substr(input, start, end - start);
-// 			count++;
-// 			if (input[i] == '|' || (input[i] == '<' && input[i + 1] != '<')
-// 				|| (input[i] == '>' && input[i + 1] != '>'))
-// 			{
-// 				if (input[i] == '|')
-// 					newinput[count] = ft_strdup("|");
-// 				else if (input[i] == '<')
-// 					newinput[count] = ft_strdup("<");
-// 				else
-// 					newinput[count] = ft_strdup(">");
-// 			}
-// 			else
-// 			{
-// 				if (input[i] == '<')
-// 					newinput[count] = ft_strdup("<<");
-// 				else
-// 					newinput[count] = ft_strdup(">>");
-// 			}
-// 			count++;
-// 			start = end + 1;
-// 		}
-// 		i++;
-// 	}
-// 	end = i;
-// 	if (!input[i])
-// 		newinput[count] = ft_substr(input, start, end - start);
-// 	free(input);
-// 	return (newinput);
-// }
-
-// char	***tripple(char **newinput)
-// {
-// 	char	***tripple;
-// 	int		i;
-
-// 	i = 0;
-// 	while (newinput[i])
-// 		i++;
-// 	tripple = (char ***)malloc ((i + 1) * sizeof(char **));
-// 	if (!tripple)
-// 		printf("error\n");
-// 	tripple[i] = NULL;
-// 	i = 0;
-// 	while (newinput[i])
-// 	{
-// 		tripple[i] = split_with_q(newinput[i], ' ');
-// 		free(newinput[i]);
-// 		i++;
-// 	}
-// 	free(newinput);
-// 	return (tripple);
-// }
-
-// void	execmd(t_data data)
-// {
-// 	if (!ft_strncmp(data.argv[0], "echo", ft_strlen("echo")))
-// 	{
-// 		printf("echo\n");
-// 		exe_echo();
-// 	}
-// 	else if (!ft_strncmp(data.argv[0], "cd", ft_strlen("cd")))
-// 		exe_cd(data);
-// 	else if (!ft_strncmp(data.argv[0], "pwd", ft_strlen("pwd")))
-// 		exe_pwd();
-// 	else if (!ft_strncmp(data.argv[0], "export", ft_strlen("export")))
-// 	{
-// 		printf("export\n");
-// 		exe_export();
-// 	}
-// 	else if (!ft_strncmp(data.argv[0], "unset", ft_strlen("unset")))
-// 	{
-// 		printf("unset\n");
-// 		exe_unset();
-// 	}
-// 	else if (!ft_strncmp(data.argv[0], "env", ft_strlen("env")))
-// 	{
-// 		printf("env\n");
-// 		exe_env();
-// 	}
-// 	else if (!ft_strncmp(data.argv[0], "exit", ft_strlen("exit")))
-// 		exe_exit();
-// 	else if (!ft_strncmp(data.argv[0], "clear", ft_strlen("clear")))
-// 		printf("%s\n", tgetstr("clear", NULL));
-// 	else
-// 		exe_other(data);
-// }
-
-void	exe_cd(char *path)
-{
-	if (chdir(path))
-		error(ERROR_12);
-}
-
-void	exe_pwd(void)
-{
-	char	*cwd;
-	int		size;
-
-	size = 1;
-	cwd = malloc(size * sizeof(char));
-	if (!cwd)
-		error(ERROR_1);
-	while (getcwd(cwd, size) == NULL)
-	{
-		if (errno == ERANGE)
+		if (ft_strncmp(input, "", ft_strlen(input)))
 		{
-			size++;
-			free(cwd);
-			cwd = malloc(size * sizeof(char));
-			if (!cwd)
-				error(ERROR_1);
-		}
-		else
-			error(ERROR_11);
-	}
-	printf("%s\n", cwd);
-	free(cwd);
-}
-
-void	exe_exit(void)
-{
-	// alles free, was allokiert wird
-	exit(0);
-}
-
-// void	ctrl_c(int signal)
-// {
-// 	signal = 0;
-// 	printf("\n");
-// 	rl_on_new_line();
-// 	rl_replace_line("", 0);
-// 	rl_redisplay();
-// }
-
-void	exe_other(t_data *data, t_leaf *tree)
-{
-	pid_t	id;
-	char	*path;
-
-	id = fork();
-	if (id < 0)
-		error(ERROR_6);
-	if (id == 0)
-	{
-		path = check_for_access(*data, tree->input1);
-		if (!(path))
-		{
-			error(ERROR_8);
-			exit(0);
-		}
-		else
-		{
-			if (execve(path, tree->input1, data->cmdpath) == -1)
-			{
-				error(ERROR_4);
-				exit(0);
-			}
+			token(input, &data);
+			id = fork();
+			if (id < 0)
+				error(ERROR_6);
+			else if (id == 0)
+				test(data.start_node, &data);
+			else if (id > 0)
+				waitpid(0, NULL, 0);
+			free(input);
 		}
 	}
-	if (id > 0)
-	{
-		waitpid(0, NULL, 0);
-		if (data->op)
-		{
-			if (!ft_strncmp(data->op, ">", ft_strlen(data->op)))
-			{
-				close(data->fd);
-				if (dup2(data->save_fd, STDOUT_FILENO) == -1)
-					printf("dup2 error\n");
-			}
-			else if (!ft_strncmp(data->op, "<", ft_strlen(data->op)))
-			{
-				close(data->fd);
-				if (dup2(data->save_fd, STDIN_FILENO) == -1)
-					printf("dup2 error\n");
-			}
-		}
-	}
-}
-
-char	*check_for_access(t_data data, char **cmd)
-{
-	int		i;
-	char	*newpath;
-	char	*tmp;
-
-	i = 0;
-	while (data.cmdpath[i])
-	{
-		tmp = ft_strjoin(data.cmdpath[i], "/");
-		newpath = ft_strjoin(tmp, cmd[0]);
-		free(tmp);
-		if (access(newpath, X_OK) == -1)
-		{
-			i++;
-			free(newpath);
-		}
-		else
-			return (newpath);
-	}
-	return (NULL);
 }
 
 void	error(char *msg)
 {
-	printf("msg = %s\n", msg);
-	perror(strerror(errno));
+	perror(msg);
+	exit(0);
 }
 
-void	freetripple(char ***argv)
+void	test(t_cmd *t, t_data *data)
 {
-	int	i;
-	int	j;
+	t_exe	*cmd;
+	t_pipe	*cmd1;
+	t_redir	*cmd2;
 
-	i = 0;
-	while (argv[i])
+	cmd = NULL;
+	cmd1 = NULL;
+	cmd2 = NULL;
+	if (t->type == EXECVE)
 	{
-		j = 0;
-		while (argv[i][j])
-		{
-			free(argv[i][j]);
-			j++;
-		}
-		free(argv[i]);
-		i++;
+		cmd = (t_exe *)t;
+		exe_execve(data, cmd);
+		return ;
 	}
-	free(argv);
+	else if (t->type == PIPE)
+	{
+		cmd1 = (t_pipe *)t;
+		exe_pipe(data, cmd1);
+	}
+	else if (t->type == REDIR)
+	{
+		cmd2 = (t_redir *)t;
+		exe_redir(data, cmd2);
+	}
 }
