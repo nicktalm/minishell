@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/13 17:44:04 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/19 11:55:30 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,11 @@ int	main(void)
 			else if (id == 0)
 				execute_cmd(data.s_n, &data);
 			else if (id > 0)
-				waitpid(0, NULL, 0);
+			{
+				if (waitpid(0, NULL, 0) == -1)
+					printf("F\n");
+				unlink("here_doc.txt");
+			}
 			free(data.in);
 		}
 	}
@@ -59,7 +63,6 @@ void	execute_cmd(t_cmd *t, t_data *data)
 		cmd = (t_exe *)t;
 		if (cmd)
 			exe_execve(data, cmd);
-		return ;
 	}
 	else if (t->type == PIPE)
 	{

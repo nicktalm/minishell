@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/13 17:34:23 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/19 11:54:39 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # include <term.h>
 # include <errno.h>
 # include "./lib/libft/libft.h"
-# include "./lib/get_next_line/get_next_line.h"
 
 // struct
 
@@ -74,6 +73,10 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
+// global varible
+
+int		Signal;
+
 // minishell
 
 int		main(void);
@@ -112,13 +115,14 @@ t_cmd	*fill_exe(char **q, char **eq, char *input, char **s);
 t_cmd	*fill_pipe(t_cmd *l, t_cmd *r);
 t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data);
 t_cmd	*fill_here_doc(char **s, char **q, char **eq, t_data *data);
+t_cmd	*search_next(t_cmd *cmd, int type);
 
 // fill_struct_utils
 
 char	**alloc_argv(char **s);
 void	check_for_mode(t_redir **cmd, char **q);
 char	**cat_struct_2(char **first, char **second, char **new);
-t_cmd	*cat_struct(t_cmd *f, t_cmd *s);
+void	cat_struct(t_cmd *f, t_cmd *s);
 int		count_argvs(char **argv);
 
 // execute
@@ -126,6 +130,7 @@ int		count_argvs(char **argv);
 void	exe_execve(t_data *data, t_exe *cmd);
 char	*check_for_access(t_data data, char **cmd);
 void	exe_redir(t_data *data, t_redir *cmd);
+void	find_redir(t_cmd *cmd, int fd, char *file, int *anw);
 void	exe_pipe(t_data *data, t_pipe *cmd);
 void	first_cmd(int *pfd, int id, t_pipe *cmd, t_data *data);
 void	exe_here_doc(t_data *data, t_here_doc *cmd);

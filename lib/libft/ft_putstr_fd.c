@@ -6,11 +6,12 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 23:37:53 by lbohm             #+#    #+#             */
-/*   Updated: 2023/10/20 10:51:25 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/14 10:52:53 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -22,4 +23,5 @@ void	ft_putstr_fd(char *s, int fd)
 		write (fd, &s[i], 1);
 		i++;
 	}
+	free(s);
 }
