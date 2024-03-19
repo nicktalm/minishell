@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:31:00 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/13 16:50:32 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/19 10:08:16 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,25 @@ void	check_for_mode(t_redir **cmd, char **q)
 	}
 }
 
-t_cmd	*cat_struct(t_cmd *f, t_cmd *s)
+void	cat_struct(t_cmd *new, t_cmd *cmd)
 {
 	t_exe	*first;
 	t_exe	*second;
-	t_exe	*new;
 	int		pos;
+	char	**argvs;
 
-	first = (t_exe *)f;
-	second = (t_exe *)s;
+	first = (t_exe *)new;
+	second = (t_exe *)cmd;
 	pos = count_argvs(first->argv) + count_argvs(second->argv);
-	new = (t_exe *)malloc (sizeof(t_exe));
-	if (!new)
+	argvs = (char **)malloc ((pos + 1) * sizeof(char *));
+	if (!argvs)
 		printf("error\n");
-	new->argv = (char **)malloc ((pos + 1) * sizeof(char *));
-	if (!new->argv)
-		printf("error\n");
-	new->argv[pos] = NULL;
-	new->type = EXECVE;
-	new->argv = cat_struct_2(first->argv, second->argv, new->argv);
+	argvs[pos] = NULL;
+	argvs = cat_struct_2(first->argv, second->argv, argvs);
 	freeup(first->argv);
+	first->argv = argvs;
 	freeup(second->argv);
-	free(first);
 	free(second);
-	return ((t_cmd *)new);
 }
 
 char	**cat_struct_2(char **first, char **second, char **new)

@@ -13,9 +13,7 @@ SRCS = minishell.c \
 		free.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
-PATHGETNEXT = lib/get_next_line/
 INLIBFT = -L $(PATHLIBFT) -lft
-INGETNEXT = -L $(PATHGETNEXT) -lftget_next_line
 
 RED = '\033[1;31m'
 BLUE ='\033[1;34m'
@@ -25,8 +23,6 @@ $(NAME):		$(OBJS)
 				@echo $(BLUE)"Compiling Libft..."$(DEF_COLOR)
 				@cd $(PATHLIBFT) && $(MAKE) all
 				@cd $(PATHLIBFT) && $(MAKE) bonus
-				@echo $(BLUE)"Compiling get_next_line..."$(DEF_COLOR)
-				@cd $(PATHGETNEXT) && $(MAKE)
 				@echo $(BLUE)"Compiling $(NAME)..."$(DEF_COLOR)
 				@cc $(OBJS) $(INLIBFT) $(INGETNEXT) -o $(NAME) $(LDFLAGS)
 
@@ -39,13 +35,11 @@ clean:
 				@echo $(RED)"Cleaning object files..."$(DEF_COLOR)
 				@rm -f $(OBJS)
 				@cd $(PATHLIBFT) && $(MAKE) clean
-				@cd $(PATHGETNEXT) && $(MAKE) clean
 
 fclean:			clean
 				@echo $(RED)"Cleaning executable files..."$(DEF_COLOR)
 				@rm -f $(NAME)
 				@cd $(PATHLIBFT) && $(MAKE) fclean
-				@cd $(PATHGETNEXT) && $(MAKE) fclean
 
 re:				fclean all
 

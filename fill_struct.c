@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 22:20:47 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/13 17:40:26 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/19 10:12:35 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 	if (data->s_n && check_next(*s, 'a'))
 	{
 		get_token(s, q, eq);
-		cmd->cmd = cat_struct(data->s_n, fill_exe(q, eq, data->in, s));
+		cat_struct(search_next(data->s_n, EXECVE), fill_exe(q, eq, data->in, s));
+		cmd->cmd = data->s_n;
 	}
 	else if (data->s_n)
 		cmd->cmd = data->s_n;
@@ -71,26 +72,56 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 	}
 	else
 		cmd->cmd = NULL;
-	return ((t_cmd *)cmd);
+	return ((t_cmd *)cmd); 
+}
+
+t_cmd	*search_next(t_cmd *cmd, int type)
+{
+	t_pipe		*cmd1;
+	t_redir		*cmd2;
+	t_here_doc	*cmd3;
+
+	cmd1 = NULL;
+	cmd2 = NULL;
+	cmd3 = NULL;
+	while (cmd->type != type)
+	{
+		if (cmd->type == PIPE)
+		{
+			cmd1 = (t_pipe *)cmd;
+			return (cmd1->right);
+		}
+		else if (cmd->type == REDIR)
+		{
+			cmd2 = (t_redir *)cmd;
+			cmd = cmd2->cmd;
+			continue ;
+		}
+		else if (cmd->type == HERE)
+		{
+			cmd3 = (t_here_doc *)cmd;
+			cmd = cmd3->cmd;
+			continue ;
+		}
+	}
+	return (cmd);
 }
 
 t_cmd	*fill_here_doc(char **s, char **q, char **eq, t_data *data)
 {
 	t_here_doc	*cmd;
-	char		*tmp;
 
 	cmd = (t_here_doc *)malloc (sizeof(t_here_doc));
 	if (!cmd)
 		printf("error\n");
 	cmd->type = HERE;
 	get_token(s, q, eq);
-	tmp = ft_substr(data->in, ft_strlen(data->in) - ft_strlen(*q), *eq - *q);
-	cmd->l = ft_strjoin(tmp, "\n");
-	free(tmp);
+	cmd->l = ft_substr(data->in, ft_strlen(data->in) - ft_strlen(*q), *eq - *q);
 	if (data->s_n && check_next(*s, 'a'))
 	{
 		get_token(s, q, eq);
-		cmd->cmd = cat_struct(data->s_n, fill_exe(q, eq, data->in, s));
+		cat_struct(search_next(data->s_n, EXECVE), fill_exe(q, eq, data->in, s));
+		cmd->cmd = data->s_n;
 	}
 	else if (data->s_n)
 		cmd->cmd = data->s_n;

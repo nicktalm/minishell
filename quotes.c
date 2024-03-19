@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 10:28:27 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/12 16:58:37 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/14 10:19:13 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,19 @@ void	double_or_single(int *d, int *s, char quote, int *first)
 
 char	*wait_for_input(char quote, char *input)
 {
-	char	*quote_promt;
+	char	*quote_prompt;
 	char	*new_input;
 	char	*tmp;
 	char	*rest;
 
-	quote_promt = "\033[1;33m > \033[0m";
+	quote_prompt = "\001\e[1;33m\002> \001\e[0m\002";
 	new_input = ft_strjoin(input, "");
 	free(input);
 	rest = ft_strdup("");
 	while (!ft_strchr(rest, quote))
 	{
 		free(rest);
-		rest = readline(quote_promt);
+		rest = readline(quote_prompt);
 		tmp = ft_strjoin(new_input, rest);
 		free(new_input);
 		new_input = ft_strdup(tmp);
