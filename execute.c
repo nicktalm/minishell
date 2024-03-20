@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/19 12:22:39 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/20 16:51:13 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,20 @@ char	*check_for_access(t_data data, char **cmd)
 void	exe_redir(t_data *data, t_redir *cmd)
 {
 	int		fdd;
-	int		anw;
+	// int		anw;
 
-	anw = 0;
+	// anw = 0;
 	fdd = 0;
 	if (cmd->fd == 0)
 	{
-		find_redir((t_cmd *)cmd, 1, cmd->f, &anw);
-		if (anw == 0)
-		{
-			fdd = open(cmd->f, cmd->mode);
-		}
-		else if (anw == 1)
-		{
-			fdd = open(cmd->f, cmd->mode);
-		}
+		// find_redir((t_cmd *)cmd, 1, cmd->f, &anw);
+		// if (anw == 0)
+		// {
+		fdd = open(cmd->f, cmd->mode);
+		// else if (anw == 1)
+		// {
+		// 	fdd = open(cmd->f, cmd->mode);
+		// }
 		if (fdd < 0)
 			error(cmd->f);
 		else if (dup2(fdd, STDIN_FILENO) == -1)
@@ -82,36 +81,36 @@ void	exe_redir(t_data *data, t_redir *cmd)
 	execute_cmd(cmd->cmd, data);
 }
 
-void	find_redir(t_cmd *cmd, int fdd, char *file, int *anw)
-{
-	t_pipe		*cmd1;
-	t_redir		*cmd2;
+// void	find_redir(t_cmd *cmd, int fdd, char *file, int *anw)
+// {
+// 	t_pipe		*cmd1;
+// 	t_redir		*cmd2;
 
-	cmd1 = NULL;
-	cmd2 = NULL;
-	if (cmd->type == EXECVE)
-		return ;
-	else if (cmd->type == PIPE)
-	{
-		cmd1 = (t_pipe *)cmd;
-		find_redir(cmd1->left, fdd, file, anw);
-		find_redir(cmd1->right, fdd, file, anw);
-	}
-	else if (cmd->type == REDIR)
-	{
-		cmd2 = (t_redir *)cmd;
-		if (cmd2->fd == fdd && !ft_strncmp(cmd2->f, file, ft_strlen(cmd2->f)))
-		{
-			*anw = 1;
-			return ;
-		}
-		else
-			find_redir(cmd2->cmd, fdd, file, anw);
-	}
-	else if (cmd->type == HERE)
-		return ;
-	return ;
-}
+// 	cmd1 = NULL;
+// 	cmd2 = NULL;
+// 	if (cmd->type == EXECVE)
+// 		return ;
+// 	else if (cmd->type == PIPE)
+// 	{
+// 		cmd1 = (t_pipe *)cmd;
+// 		find_redir(cmd1->left, fdd, file, anw);
+// 		find_redir(cmd1->right, fdd, file, anw);
+// 	}
+// 	else if (cmd->type == REDIR)
+// 	{
+// 		cmd2 = (t_redir *)cmd;
+// 		if (cmd2->fd == fdd && !ft_strncmp(cmd2->f, file, ft_strlen(cmd2->f)))
+// 		{
+// 			*anw = 1;
+// 			return ;
+// 		}
+// 		else
+// 			find_redir(cmd2->cmd, fdd, file, anw);
+// 	}
+// 	else if (cmd->type == HERE)
+// 		return ;
+// 	return ;
+// }
 
 void	exe_pipe(t_data *data, t_pipe *cmd)
 {

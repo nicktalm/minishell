@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/19 11:55:30 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/20 15:47:47 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,26 @@ void	execute_cmd(t_cmd *t, t_data *data)
 	cmd3 = NULL;
 	if (t->type == EXECVE)
 	{
+		//printf("exe\n");
 		cmd = (t_exe *)t;
 		if (cmd)
 			exe_execve(data, cmd);
 	}
 	else if (t->type == PIPE)
 	{
+		//printf("pipe\n");
 		cmd1 = (t_pipe *)t;
 		exe_pipe(data, cmd1);
 	}
 	else if (t->type == REDIR)
 	{
 		cmd2 = (t_redir *)t;
+		//printf("redir %i\n", cmd2->fd);
 		exe_redir(data, cmd2);
 	}
 	else if (t->type == HERE)
 	{
+		//printf("here\n");
 		cmd3 = (t_here_doc *)t;
 		exe_here_doc(data, cmd3);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/13 13:17:50 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/19 19:02:08 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void	exe_exit(void)
 	exit(0);
 }
 
-void	ctrl_c(int signal)
-{
-	signal = 0;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+// void	ctrl_c(int signal)
+// {
+// 	signal = 0;
+// 	printf("\n");
+// 	rl_on_new_line();
+// 	rl_replace_line("", 0);
+// 	rl_redisplay();
+// }

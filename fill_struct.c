@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+//* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   fill_struct.c                                      :+:      :+:    :+:   */
@@ -35,20 +35,41 @@ t_cmd	*fill_exe(char **q, char **eq, char *in, char **s)
 
 t_cmd	*fill_pipe(t_cmd *l, t_cmd *r)
 {
-	t_pipe	*cmd;
+	t_pipe		*cmd;
+	t_here_doc	*doc;
+	t_redir		*redir;
 
 	cmd = (t_pipe *)malloc (sizeof(t_pipe));
 	if (!cmd)
 		printf("error\n");
 	cmd->type = PIPE;
-	cmd->left = l;
+	if (l->type == HERE)
+	{
+		doc = (t_here_doc *)l;
+		cmd->left = doc->cmd;
+		cmd->right = r;
+		doc->cmd = (t_cmd *)cmd;
+		return ((t_cmd *)doc);
+	}
+	else if (l->type == REDIR)
+	{
+		redir = (t_redir *)l;
+		cmd->left = redir->cmd;
+		cmd->right = r;
+		redir->cmd = (t_cmd *)cmd;
+		return ((t_cmd *)redir);
+	}
+	else
+		cmd->left = l;
 	cmd->right = r;
 	return ((t_cmd *)cmd);
 }
 
 t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 {
-	t_redir	*cmd;
+	t_redir		*cmd;
+	t_here_doc	*doc;
+	t_redir		*check;
 
 	cmd = (t_redir *)malloc (sizeof(t_redir));
 	if (!cmd)
@@ -57,14 +78,32 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 	check_for_mode(&cmd, q);
 	get_token(s, q, eq);
 	cmd->f = ft_substr(data->in, ft_strlen(data->in) - ft_strlen(*q), *eq - *q);
-	if (data->s_n && check_next(*s, 'a'))
+	if (data->s_n)
 	{
-		get_token(s, q, eq);
-		cat_struct(search_next(data->s_n, EXECVE), fill_exe(q, eq, data->in, s));
+		if (check_next(*s, 'a'))
+		{
+			get_token(s, q, eq);
+			cat_struct(search_next(data->s_n, EXECVE), fill_exe(q, eq, data->in, s));
+		}
+		else if (data->s_n->type == HERE)
+		{
+			doc = (t_here_doc *)data->s_n;
+			cmd->cmd = doc->cmd;
+			doc->cmd = (t_cmd *)cmd;
+			return ((t_cmd *)doc);
+		}
+		else if (data->s_n->type == REDIR)
+		{
+			check = (t_redir *)data->s_n;
+			if (check->fd == 1)
+			{
+				cmd->cmd = check->cmd;
+				check->cmd = (t_cmd *)cmd;
+				return ((t_cmd *)check);
+			}
+		}
 		cmd->cmd = data->s_n;
 	}
-	else if (data->s_n)
-		cmd->cmd = data->s_n;
 	else if (check_next(*s, 'a'))
 	{
 		get_token(s, q, eq);
