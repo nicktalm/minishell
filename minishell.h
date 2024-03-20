@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/19 11:54:39 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/20 16:51:54 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int		count_argvs(char **argv);
 void	exe_execve(t_data *data, t_exe *cmd);
 char	*check_for_access(t_data data, char **cmd);
 void	exe_redir(t_data *data, t_redir *cmd);
-void	find_redir(t_cmd *cmd, int fd, char *file, int *anw);
+// void	find_redir(t_cmd *cmd, int fd, char *file, int *anw);
 void	exe_pipe(t_data *data, t_pipe *cmd);
 void	first_cmd(int *pfd, int id, t_pipe *cmd, t_data *data);
 void	exe_here_doc(t_data *data, t_here_doc *cmd);
