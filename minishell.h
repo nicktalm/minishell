@@ -139,7 +139,7 @@ int		count_argvs(char **argv);
 void	exe_execve(t_data *data, t_exe *cmd);
 char	*check_for_access(t_data data, char **cmd);
 void	exe_redir(t_data *data, t_redir *cmd);
-void	find_redir(t_cmd *cmd, int fd, char *file, int *anw);
+// void	find_redir(t_cmd *cmd, int fd, char *file, int *anw);
 void	exe_pipe(t_data *data, t_pipe *cmd);
 void	first_cmd(int *pfd, int id, t_pipe *cmd, t_data *data);
 void	exe_here_doc(t_data *data, t_here_doc *cmd);

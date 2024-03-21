@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:11:20 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/15 11:26:31 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/20 16:13:24 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,15 @@ void	token(char *input, t_data *data)
 			}
 		}
 		else if (token == '>')
-		{
-			// printf("here >\n");
 			data->s_n = fill_redir(&s, &q, &eq, data);
-		}
 		else if (token == '<')
-		{
-			// printf("here <\n");
 			data->s_n = fill_redir(&s, &q, &eq, data);
-		}
 		else if (token == '+')
 			data->s_n = fill_redir(&s, &q, &eq, data);
 		else if (token == '-')
 			data->s_n = fill_here_doc(&s, &q, &eq, data);
 		else if (token == 'a')
-		{
-			// printf("here a\n");
 			data->s_n = fill_exe(&q, &eq, input, &s);
-		}
 	}
 }
 

@@ -66,22 +66,26 @@ void	execute_cmd(t_cmd *t, t_data *data)
 	cmd3 = NULL;
 	if (t->type == EXECVE)
 	{
+		//printf("exe\n");
 		cmd = (t_exe *)t;
 		if (cmd)
 			exe_execve(data, cmd);
 	}
 	else if (t->type == PIPE)
 	{
+		//printf("pipe\n");
 		cmd1 = (t_pipe *)t;
 		exe_pipe(data, cmd1);
 	}
 	else if (t->type == REDIR)
 	{
 		cmd2 = (t_redir *)t;
+		//printf("redir %i\n", cmd2->fd);
 		exe_redir(data, cmd2);
 	}
 	else if (t->type == HERE)
 	{
+		//printf("here\n");
 		cmd3 = (t_here_doc *)t;
 		exe_here_doc(data, cmd3);
 	}
