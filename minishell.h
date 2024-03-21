@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/19 11:54:39 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/21 13:00:54 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@
 # include "./lib/libft/libft.h"
 
 // struct
+
+typedef struct s_var
+{
+	char			*name;
+	char			*value;
+	struct s_var	*nxt;
+}				t_var;
 
 typedef struct s_data
 {
@@ -73,13 +80,15 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
+void	init_env(char **env, t_var **vars);
+
 // global varible
 
 int		Signal;
 
 // minishell
 
-int		main(void);
+int		main(int argc, char **argv, char **env);
 void	error(char *msg);
 void	execute_cmd(t_cmd *t, t_data *data);
 
@@ -141,6 +150,7 @@ void	exe_cd(char *path);
 void	exe_pwd(void);
 void	exe_exit(void);
 void	ctrl_c(int signal);
+void	exe_env(t_var *vars);
 
 // free
 

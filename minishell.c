@@ -3,21 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/19 11:55:30 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/21 13:58:39 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(void)
+int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 	pid_t	id;
+	t_var	*vars;
 
+	argc = 0;
+	argv = 0;
+	vars = NULL;
 	data.cmd_path = ft_split(getenv("PATH"), ':');
+	init_env(env, &vars);
+	exe_env(vars);
 	while (1)
 	{
 		data.in = print_prompt();
