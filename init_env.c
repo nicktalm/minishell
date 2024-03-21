@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:29:58 by ntalmon           #+#    #+#             */
-/*   Updated: 2024/03/21 13:02:52 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/21 14:24:29 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,7 @@ void	init_env(char **env, t_var **vars)
 			ft_lstadd_back_new(vars, ft_lstnew_new(ft_substr(env[index],
 						0, name_len), ft_substr(equal_sign + 1,
 						0, ft_strlen(equal_sign + 1))));
-			// printf("%s", vars[num_vars].name);
-			// printf("%s", vars[num_vars].value);
 		}
-		// printf("\n");
 		index++;
 	}
 }

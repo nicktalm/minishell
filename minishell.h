@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/21 14:08:00 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/21 17:08:11 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,11 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
+t_var	*ft_lstnew_new(char *name, char *value);
+void	ft_lstadd_back_new(t_var **lst, t_var *new);
 void	init_env(char **env, t_var **vars);
+void	exe_export(t_data *data, t_exe *cmd);
+void	check_for_bultin(t_data *data, t_exe *cmd);
 
 // global varible
 

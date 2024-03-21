@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/21 14:08:43 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/21 17:53:37 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int argc, char **argv, char **env)
 	data.vars = NULL;
 	data.cmd_path = ft_split(getenv("PATH"), ':');
 	init_env(env, &data.vars);
-	exe_env(data.vars);
 	while (1)
 	{
 		data.in = print_prompt();
@@ -30,6 +29,7 @@ int	main(int argc, char **argv, char **env)
 		if (ft_strncmp(data.in, "", ft_strlen(data.in)))
 		{
 			token(data.in, &data);
+			
 			id = fork();
 			if (id < 0)
 				error(ERROR_6);
