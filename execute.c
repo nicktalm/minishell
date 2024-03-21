@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/20 16:51:13 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:52:28 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,21 @@ void	exe_execve(t_data *data, t_exe *cmd)
 {
 	char	*path;
 
+	check_for_bultin(data, cmd);
 	path = check_for_access(*data, cmd->argv);
 	if (!(path))
 		error(ERROR_8);
 	if (execve(path, cmd->argv, data->cmd_path) == -1)
 		error(ERROR_4);
+}
+
+void	check_for_bultin(t_data *data, t_exe *cmd)
+{
+	if (!ft_strncmp(cmd->argv[0], "export", ft_strlen(cmd->argv[0])))
+		exe_export(data, cmd);
+	else if (!ft_strncmp(cmd->argv[0], "env", ft_strlen(cmd->argv[0])))
+		exe_env(data->vars);
+	// exit (0);
 }
 
 char	*check_for_access(t_data data, char **cmd)
