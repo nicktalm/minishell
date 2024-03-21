@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/21 13:58:39 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/21 14:08:43 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,13 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 	pid_t	id;
-	t_var	*vars;
 
 	argc = 0;
 	argv = 0;
-	vars = NULL;
+	data.vars = NULL;
 	data.cmd_path = ft_split(getenv("PATH"), ':');
-	init_env(env, &vars);
-	exe_env(vars);
+	init_env(env, &data.vars);
+	exe_env(data.vars);
 	while (1)
 	{
 		data.in = print_prompt();
@@ -38,8 +37,7 @@ int	main(int argc, char **argv, char **env)
 				execute_cmd(data.s_n, &data);
 			else if (id > 0)
 			{
-				if (waitpid(0, NULL, 0) == -1)
-					printf("F\n");
+				waitpid(0, NULL, 0);
 				unlink("here_doc.txt");
 			}
 			free(data.in);
