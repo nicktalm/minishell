@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/19 19:02:08 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/21 12:42:56 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,28 @@ void	exe_exit(void)
 	exit(0);
 }
 
-// void	ctrl_c(int signal)
-// {
-// 	signal = 0;
-// 	printf("\n");
-// 	rl_on_new_line();
-// 	rl_replace_line("", 0);
-// 	rl_redisplay();
-// }
+void	ctrl_c(int signal)
+{
+	signal = 0;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	exe_env(t_var *vars)
+{
+	t_var	*ptr;
+
+	ptr = vars;
+	if (vars == NULL || vars->name == NULL)
+	{
+		printf("Keine Umgebungsvariablen vorhanden.\n");
+		return ;
+	}
+	while (ptr != NULL)
+	{
+		printf("%s=%s\n", ptr->name, ptr->value);
+		ptr = ptr->nxt;
+	}
+}

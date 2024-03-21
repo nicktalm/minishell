@@ -10,6 +10,7 @@ SRCS = minishell.c \
 		fill_struct_utils.c \
 		execute.c \
 		builtins.c \
+		init_env.c \
 		free.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
