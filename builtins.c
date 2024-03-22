@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/22 15:59:04 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/22 18:08:41 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ void	exe_export(t_data *data, t_exe *cmd)
 				&& !(ft_strncmp(ptr->name, name_to_search,
 						ft_strlen(ptr->name))))
 			{
-				ptr->value = ft_substr(cmd->argv[1],
-						ft_strlen(ft_strchr(cmd->argv[1], '=') + 1),
+				free(ptr->value);
+				ptr->value = ft_substr(cmd->argv[1], len_name + 1,
 						ft_strlen(ft_strchr(cmd->argv[1], '=')));
 				break ;
 			}
