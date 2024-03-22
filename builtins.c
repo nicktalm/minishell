@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/21 17:52:04 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/22 15:59:04 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,25 +82,49 @@ void	exe_export(t_data *data, t_exe *cmd)
 	int		len_name;
 
 	ptr = data->vars;
-	len_name = (ft_strlen(cmd->argv[1])
-			- ft_strlen(ft_strchr(cmd->argv[1], '=')));
-	name_to_search = ft_substr(cmd->argv[1], 0, len_name);
+	if (ft_strchr(cmd->argv[1], '='))
+	{
+		len_name = (ft_strlen(cmd->argv[1])
+				- ft_strlen(ft_strchr(cmd->argv[1], '=')));
+		name_to_search = ft_substr(cmd->argv[1], 0, len_name);
+		while (ptr != NULL)
+		{
+			if (!(ft_strncmp(ptr->name, name_to_search,
+						ft_strlen(name_to_search)))
+				&& !(ft_strncmp(ptr->name, name_to_search,
+						ft_strlen(ptr->name))))
+			{
+				ptr->value = ft_substr(cmd->argv[1],
+						ft_strlen(ft_strchr(cmd->argv[1], '=') + 1),
+						ft_strlen(ft_strchr(cmd->argv[1], '=')));
+				break ;
+			}
+			ptr = ptr->nxt;
+		}
+		if (ptr == NULL)
+		{
+			ft_lstadd_back_new(&data->vars,
+				ft_lstnew_new(ft_substr(cmd->argv[1], 0, len_name),
+					ft_substr(cmd->argv[1], len_name + 1,
+						ft_strlen(ft_strchr(cmd->argv[1], '=')) + 1)));
+		}
+	}
+}
+
+void	exe_unset(t_data *data, t_exe *cmd)
+{
+	t_var	*ptr;
+	char	*name_to_search;
+
+	ptr = data->vars;
+	name_to_search = cmd->argv[1];
 	while (ptr != NULL)
 	{
 		if (!ft_strncmp(ptr->name, name_to_search, ft_strlen(ptr->name)))
 		{
-			ptr->value = ft_substr(cmd->argv[1],
-					ft_strlen(ft_strchr(cmd->argv[1], '=') + 1),
-					ft_strlen(ft_strchr(cmd->argv[1], '=')));
+			ft_lstdelone_new(&(data->vars), ptr, del);
 			break ;
 		}
 		ptr = ptr->nxt;
-	}
-	if (ptr == NULL)
-	{
-		ft_lstadd_back_new(&data->vars, ft_lstnew_new(ft_substr(cmd->argv[1],
-					0, len_name), ft_substr(cmd->argv[1],
-					ft_strlen(ft_strchr(cmd->argv[1], '='))
-					+ 1, ft_strlen(ft_strchr(cmd->argv[1], '=')) - 1)));
 	}
 }

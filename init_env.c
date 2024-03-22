@@ -6,11 +6,43 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:29:58 by ntalmon           #+#    #+#             */
-/*   Updated: 2024/03/21 14:24:29 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/22 12:41:04 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	del(void *var)
+{
+	free(var);
+}
+
+void	ft_lstdelone_new(t_var **head,
+		t_var *node_to_remove, void (*del)(void *))
+{
+	t_var	*current;
+
+	if (*head == NULL || node_to_remove == NULL)
+		return ;
+	if (*head == node_to_remove)
+	{
+		*head = (*head)->nxt;
+		del(node_to_remove->name);
+		del(node_to_remove->value);
+		free(node_to_remove);
+		return ;
+	}
+	current = *head;
+	while (current != NULL && current->nxt != node_to_remove)
+		current = current->nxt;
+	if (current != NULL)
+	{
+		current->nxt = node_to_remove->nxt;
+		del(node_to_remove->name);
+		del(node_to_remove->value);
+		free(node_to_remove);
+	}
+}
 
 t_var	*ft_lstnew_new(char *name, char *value)
 {

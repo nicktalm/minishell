@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/21 17:52:28 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/22 12:36:13 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,15 @@ void	check_for_bultin(t_data *data, t_exe *cmd)
 	if (!ft_strncmp(cmd->argv[0], "export", ft_strlen(cmd->argv[0])))
 		exe_export(data, cmd);
 	else if (!ft_strncmp(cmd->argv[0], "env", ft_strlen(cmd->argv[0])))
+	{
 		exe_env(data->vars);
-	// exit (0);
+		exit (0);
+	}
+	else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
+	{
+		exe_unset(data, cmd);
+		exit (0);
+	}
 }
 
 char	*check_for_access(t_data data, char **cmd)
