@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/21 18:09:33 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/22 12:35:45 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,11 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
-
 void	exe_export(t_data *data, t_exe *cmd);
 void	check_for_bultin(t_data *data, t_exe *cmd);
+void	ft_lstdelone_new(t_var **head, t_var *node_to_remove, void (*del)(void *));
+void	del(void *var);
+void	exe_unset(t_data *data, t_exe *cmd);
 
 // global varible
 

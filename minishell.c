@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/22 10:02:33 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/22 11:19:07 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int	ka(t_data data)
 			exe_exit();
 			return (1);
 		}
-		// else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
-		// 	exe_export(&data, cmd);
+		else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
+			exe_unset(&data, cmd);
 		// else if (!ft_strncmp(cmd->argv[0], "cd", ft_strlen(cmd->argv[0])))
 		// 	exe_export(&data, cmd);
 	}
