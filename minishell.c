@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/21 17:53:37 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/22 10:02:33 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,47 @@ int	main(int argc, char **argv, char **env)
 		if (ft_strncmp(data.in, "", ft_strlen(data.in)))
 		{
 			token(data.in, &data);
-			
-			id = fork();
-			if (id < 0)
-				error(ERROR_6);
-			else if (id == 0)
-				execute_cmd(data.s_n, &data);
-			else if (id > 0)
+			if (!ka(data))
 			{
-				waitpid(0, NULL, 0);
-				unlink("here_doc.txt");
+				id = fork();
+				if (id < 0)
+					error(ERROR_6);
+				else if (id == 0)
+					execute_cmd(data.s_n, &data);
+				else if (id > 0)
+				{
+					waitpid(0, NULL, 0);
+					unlink("here_doc.txt");
+				}
 			}
 			free(data.in);
 		}
 	}
+}
+
+int	ka(t_data data)
+{
+	t_exe	*cmd;
+
+	if (data.s_n->type == EXECVE)
+	{
+		cmd = (t_exe *)data.s_n;
+		if (!ft_strncmp(cmd->argv[0], "export", ft_strlen(cmd->argv[0])))
+		{
+			exe_export(&data, cmd);
+			return (1);
+		}
+		else if (!ft_strncmp(cmd->argv[0], "exit", ft_strlen(cmd->argv[0])))
+		{
+			exe_exit();
+			return (1);
+		}
+		// else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
+		// 	exe_export(&data, cmd);
+		// else if (!ft_strncmp(cmd->argv[0], "cd", ft_strlen(cmd->argv[0])))
+		// 	exe_export(&data, cmd);
+	}
+	return (0);
 }
 
 void	error(char *msg)
@@ -64,26 +91,26 @@ void	execute_cmd(t_cmd *t, t_data *data)
 	cmd3 = NULL;
 	if (t->type == EXECVE)
 	{
-		//printf("exe\n");
+		//fprintf(stderr, "exe\n");
 		cmd = (t_exe *)t;
-		if (cmd)
-			exe_execve(data, cmd);
+		exe_execve(data, cmd);
+		//exit(0);
 	}
 	else if (t->type == PIPE)
 	{
-		//printf("pipe\n");
+		//fprintf(stderr, "pipe\n");
 		cmd1 = (t_pipe *)t;
 		exe_pipe(data, cmd1);
 	}
 	else if (t->type == REDIR)
 	{
 		cmd2 = (t_redir *)t;
-		//printf("redir %i\n", cmd2->fd);
+		//fprintf(stderr, "redir %i\n", cmd2->fd);
 		exe_redir(data, cmd2);
 	}
 	else if (t->type == HERE)
 	{
-		//printf("here\n");
+		//fprintf(stderr, "here\n");
 		cmd3 = (t_here_doc *)t;
 		exe_here_doc(data, cmd3);
 	}
