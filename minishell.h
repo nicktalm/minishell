@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/21 17:08:11 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/21 18:09:33 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,7 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
-t_var	*ft_lstnew_new(char *name, char *value);
-void	ft_lstadd_back_new(t_var **lst, t_var *new);
-void	init_env(char **env, t_var **vars);
+
 void	exe_export(t_data *data, t_exe *cmd);
 void	check_for_bultin(t_data *data, t_exe *cmd);
 
@@ -96,6 +94,7 @@ int		Signal;
 int		main(int argc, char **argv, char **env);
 void	error(char *msg);
 void	execute_cmd(t_cmd *t, t_data *data);
+int		ka(t_data data);
 
 // cmd_prompt
 
@@ -160,6 +159,12 @@ void	exe_env(t_var *vars);
 // free
 
 char	**freeup(char	**arr);
+
+// init_env
+
+t_var	*ft_lstnew_new(char *name, char *value);
+void	ft_lstadd_back_new(t_var **lst, t_var *new);
+void	init_env(char **env, t_var **vars);
 
 // struct nbr
 
