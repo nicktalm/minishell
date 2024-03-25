@@ -51,16 +51,17 @@ t_cmd	*fill_pipe(t_cmd *l, t_cmd *r)
 		doc->cmd = (t_cmd *)cmd;
 		return ((t_cmd *)doc);
 	}
-	else if (l->type == REDIR)
-	{
-		redir = (t_redir *)l;
-		cmd->left = redir->cmd;
-		cmd->right = r;
-		redir->cmd = (t_cmd *)cmd;
-		return ((t_cmd *)redir);
-	}
-	else
-		cmd->left = l;
+	// else if (l->type == REDIR)
+	// {
+	// 	redir = (t_redir *)l;
+	// 	cmd->left = redir->cmd;
+	// 	cmd->right = r;
+	// 	redir->cmd = (t_cmd *)cmd;
+	// 	return ((t_cmd *)redir);
+	// }
+	fprintf(stderr, "left = %i\n", l->type);
+	fprintf(stderr, "right = %i\n", r->type);
+	cmd->left = l;
 	cmd->right = r;
 	return ((t_cmd *)cmd);
 }
@@ -78,7 +79,9 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 	check_for_mode(&cmd, q);
 	get_token(s, q, eq);
 	cmd->f = ft_substr(data->in, ft_strlen(data->in) - ft_strlen(*q), *eq - *q);
-	if (data->s_n)
+	if (data->exe)
+		cmd->cmd = data->exe;
+	else if (data->s_n)
 	{
 		if (check_next(*s, 'a'))
 		{
@@ -92,16 +95,16 @@ t_cmd	*fill_redir(char **s, char **q, char **eq, t_data *data)
 			doc->cmd = (t_cmd *)cmd;
 			return ((t_cmd *)doc);
 		}
-		else if (data->s_n->type == REDIR)
-		{
-			check = (t_redir *)data->s_n;
-			if (check->fd == 1)
-			{
-				cmd->cmd = check->cmd;
-				check->cmd = (t_cmd *)cmd;
-				return ((t_cmd *)check);
-			}
-		}
+		// else if (data->s_n->type == REDIR)
+		// {
+		// 	check = (t_redir *)data->s_n;
+		// 	if (check->fd == 1)
+		// 	{
+		// 		cmd->cmd = check->cmd;
+		// 		check->cmd = (t_cmd *)cmd;
+		// 		return ((t_cmd *)check);
+		// 	}
+		// }
 		cmd->cmd = data->s_n;
 	}
 	else if (check_next(*s, 'a'))

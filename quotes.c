@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 10:28:27 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/14 10:19:13 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/23 00:09:27 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*check_for_quotes(char *input)
+char	*check_for_quotes(char *input, t_data data)
 {
 	int		i;
 	int		double_q;
@@ -32,11 +32,11 @@ char	*check_for_quotes(char *input)
 	if (double_q == 1 || single_q == 1)
 	{
 		if (double_q == 1 && first == 100)
-			return (wait_for_input('"', input));
+			return (wait_for_input('"', input, data));
 		else if (single_q == 1 && first == 115)
-			return (wait_for_input(39, input));
+			return (wait_for_input(39, input, data));
 	}
-	return (clean_input(input));
+	return (clean_input(input, data));
 }
 
 void	double_or_single(int *d, int *s, char quote, int *first)
@@ -65,7 +65,7 @@ void	double_or_single(int *d, int *s, char quote, int *first)
 	}
 }
 
-char	*wait_for_input(char quote, char *input)
+char	*wait_for_input(char quote, char *input, t_data data)
 {
 	char	*quote_prompt;
 	char	*new_input;
@@ -86,10 +86,10 @@ char	*wait_for_input(char quote, char *input)
 		free(tmp);
 	}
 	free(rest);
-	return (clean_input(new_input));
+	return (clean_input(new_input, data));
 }
 
-char	*clean_input(char *input)
+char	*clean_input(char *input, t_data data)
 {
 	int	i;
 	int	d_q;
@@ -101,7 +101,7 @@ char	*clean_input(char *input)
 	while (input[i])
 	{
 		if (input[i] == '$' && s_q == 0)
-			input = check_env(input, i + 1);
+			input = check_env(input, i + 1, data);
 		else if (input[i] == '"' && s_q == 0)
 			clean_input_2(input, i, &d_q);
 		else if (input[i] == 39 && d_q == 0)
