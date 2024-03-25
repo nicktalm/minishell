@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/25 15:05:34 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/25 18:24:12 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ void	check_for_bultin(t_data *data, t_exe *cmd)
 	else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
 	{
 		exe_unset(data, cmd);
+		exit (0);
+	}
+	else if (!ft_strncmp(cmd->argv[0], "echo", ft_strlen(cmd->argv[0])))
+	{
+		exe_echo(cmd);
 		exit (0);
 	}
 }
