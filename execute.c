@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/23 00:11:04 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:05:34 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 void	exe_execve(t_data *data, t_exe *cmd)
 {
-	char	*path;
-
 	check_for_bultin(data, cmd);
-	path = check_for_access(*data, cmd->argv);
-	if (!(path))
+	data->path_exe = check_for_access(*data, cmd->argv);
+	if (!(data->path_exe))
 		error(ERROR_8);
-	if (execve(path, cmd->argv, data->cmd_path) == -1)
+	if (execve(data->path_exe, cmd->argv, data->cmd_path) == -1)
 		error(ERROR_4);
 }
 
@@ -47,6 +45,11 @@ char	*check_for_access(t_data data, char **cmd)
 	char	*tmp;
 
 	i = 0;
+	if (ft_strchr(cmd[0], '/') && access(cmd[0], X_OK) != -1)
+	{
+		newpath = ft_strdup(cmd[0]);
+		return (newpath);
+	}
 	while (data.cmd_path[i])
 	{
 		tmp = ft_strjoin(data.cmd_path[i], "/");
@@ -66,20 +69,11 @@ char	*check_for_access(t_data data, char **cmd)
 void	exe_redir(t_data *data, t_redir *cmd)
 {
 	int		fdd;
-	// int		anw;
 
-	// anw = 0;
 	fdd = 0;
 	if (cmd->fd == 0)
 	{
-		// find_redir((t_cmd *)cmd, 1, cmd->f, &anw);
-		// if (anw == 0)
-		// {
 		fdd = open(cmd->f, cmd->mode);
-		// else if (anw == 1)
-		// {
-		// 	fdd = open(cmd->f, cmd->mode);
-		// }
 		if (fdd < 0)
 			error(cmd->f);
 		else if (dup2(fdd, STDIN_FILENO) == -1)

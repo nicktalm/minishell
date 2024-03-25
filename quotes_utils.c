@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 14:36:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/23 00:06:12 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:12:12 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 	i = 0;
 	if (ft_strlen(s1) != ft_strlen(s2))
-		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		return ((unsigned char)s1 - (unsigned char)s2);
 	while (s1[i] != '\0')
 	{
 		if ((unsigned char)s1[i] != (unsigned char)s2[i])

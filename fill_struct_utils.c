@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:31:00 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/19 10:08:16 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/25 16:33:55 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,17 @@ char	**alloc_argv(char **s)
 	int		i;
 	char	**argv;
 	char	*new_s;
+	char	*q;
+	char	*eq;
 
+	q = NULL;
+	eq = NULL;
 	new_s = ft_strdup(*s);
 	i = 1;
 	while (check_next(new_s, 'a'))
 	{
 		i++;
-		get_token(&new_s, 0, 0);
+		get_token(&new_s, &q, &eq);
 	}
 	argv = (char **)malloc ((i + 1) * sizeof(char *));
 	if (!argv)

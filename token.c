@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:11:20 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/23 18:44:37 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:00:44 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,22 @@ void	token(char *input, t_data *data)
 	while (*s)
 	{
 		token = get_token(&s, &q, &eq);
-		printf("token = %c\n", token);
 		if (token == '|')
 		{
 			if (check_next(s, 'a'))
 			{
 				get_token(&s, &q, &eq);
 				data->exe = fill_exe(&q, &eq, input, &s);
-				if (check_next(s, '<'))
+				if (check_next(s, '<') || check_next(s, '>')
+					|| check_next(s, '+'))
 				{
 					get_token(&s, &q, &eq);
 					data->s_n = fill_pipe(data->s_n, fill_redir(&s, &q, &eq, data));
+				}
+				else if (check_next(s, '-'))
+				{
+					get_token(&s, &q, &eq);
+					data->s_n = fill_pipe(data->s_n, fill_here_doc(&s, &q, &eq, data));
 				}
 				else
 					data->s_n = fill_pipe(data->s_n, data->exe);
@@ -45,11 +50,19 @@ void	token(char *input, t_data *data)
 			else if (check_next(s, '<') || check_next(s, '>')
 				|| check_next(s, '+'))
 			{
-				
+				get_token(&s, &q, &eq);
+				if (check_next(s, 'a'))
+				{
+					printf("here\n");
+					data->exe = fill_exe(0, 0, 0, 0);
+					printf("here2\n");
+				}
+				data->s_n = fill_pipe(data->s_n, fill_redir(&s, &q, &eq, data));
 			}
 			else if (check_next(s, '-'))
 			{
-				
+				get_token(&s, &q, &eq);
+				data->s_n = fill_pipe(data->s_n, fill_here_doc(&s, &q, &eq, data));
 			}
 		}
 		else if (token == '>' || token == '<' || token == '+')
@@ -69,8 +82,7 @@ char	get_token(char **s, char **q, char **eq)
 	isspace = " \t\n\v\f\r";
 	while (ft_strchr(isspace, **s) && **s != '\0')
 		(*s)++;
-	if (q)
-		*q = *s;
+	*q = *s;
 	if (**s == '\0')
 		return (0);
 	else if (!ft_strncmp(*s, "| ", 2) || !ft_strncmp(*s, "|", 2))
@@ -87,12 +99,11 @@ char	get_token(char **s, char **q, char **eq)
 		ret = 'a';
 	while (!ft_strchr(isspace, **s) && **s != '\0')
 		(*s)++;
-	if (eq)
-		*eq = *s;
+	*eq = *s;
 	return (ret);
 }
 
-int	check_next(char *s, char token)
+int	check_next(char *s, char t)
 {
 	char	*isspace;
 	char	*tokens;
@@ -101,25 +112,17 @@ int	check_next(char *s, char token)
 	tokens = "<|>";
 	while (ft_strchr(isspace, *s) && *s)
 		s++;
-	if (*s == '|' && token == '|')
+	if ((!ft_strncmp(s, "| ", 2) || !ft_strncmp(s, "|", 2)) && t == '|')
 		return (1);
-	else if (*s == '>' && token == '>')
+	else if ((!ft_strncmp(s, ">> ", 3) || !ft_strncmp(s, ">>", 3)) && t == '+')
 		return (1);
-	else if (*s == '<' && token == '<')
+	else if ((!ft_strncmp(s, "<< ", 3) || !ft_strncmp(s, "<<", 3)) && t == '-')
 		return (1);
-	else if (*s == '>' && token == '+')
-	{
-		s++;
-		if (*s == '>')
-			return (1);
-	}
-	else if (*s == '<' && token == '-')
-	{
-		s++;
-		if (*s == '<')
-			return (1);
-	}
-	else if (!ft_strchr(tokens, *s) && token == 'a')
+	else if ((!ft_strncmp(s, "< ", 2) || !ft_strncmp(s, "<", 2)) && t == '<')
+		return (1);
+	else if ((!ft_strncmp(s, "> ", 2) || !ft_strncmp(s, ">", 2)) && t == '>')
+		return (1);
+	else if (!ft_strchr(tokens, *s) && t == 'a')
 		return (1);
 	return (0);
 }
