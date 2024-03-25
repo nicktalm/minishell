@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 11:16:37 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/14 10:16:31 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/25 18:02:07 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ char	*print_prompt(void)
 	prompt = free_used_string(cwd, tmp, 1, 1);
 	input = readline(prompt);
 	free(prompt);
-	add_history(input);
+	if (ft_strcmp(input, ""))
+		add_history(input);
 	return (input);
 }
 
