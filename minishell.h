@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/23 18:13:47 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:04:22 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_data
 	char			*in;
 	struct s_var	*vars;
 	struct s_cmd	*exe;
+	char			*path_exe;
 }				t_data;
 
 typedef struct s_cmd
@@ -119,7 +120,7 @@ void	clean_input_2(char *input, int i, int *quote);
 char	*check_env_2(char *ret, char *input, int start, int end);
 char	*check_env(char *input, int i, t_data data);
 char	*get_env(char *value, t_var **env);
-int	ft_strcmp(const char *s1, const char *s2);
+int		ft_strcmp(const char *s1, const char *s2);
 
 // token
 
@@ -158,13 +159,18 @@ void	exe_here_doc(t_data *data, t_here_doc *cmd);
 
 void	exe_cd(char *path);
 void	exe_pwd(void);
-void	exe_exit(void);
+void	exe_exit(t_data data);
 void	ctrl_c(int signal);
 void	exe_env(t_var *vars);
 
 // free
 
 char	**freeup(char	**arr);
+void	free_ast(t_cmd *cmd);
+void	free_exe(t_exe	*node);
+void	free_redir(t_redir *node);
+void	free_here(t_here_doc *node);
+void	free_lst(t_var	**lst);
 
 // init_env
 

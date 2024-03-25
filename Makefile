@@ -1,6 +1,6 @@
 NAME = minishell
-# CFLAGS = -Wall -Werror -Wextra
-LDFLAGS = -lreadline -lncurses -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra
+LDFLAGS = -lreadline -lncurses -fsanitize=address #-L /Users/lbohm/LeakSanitizer -llsan
 SRCS = minishell.c \
 		cmd_prompt.c \
 		quotes.c \

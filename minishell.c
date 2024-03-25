@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/23 18:29:43 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:05:52 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,39 @@ int	main(int argc, char **argv, char **env)
 	t_data	data;
 	pid_t	id;
 
-	argc = 0;
-	argv = 0;
 	data.vars = NULL;
-	data.cmd_path = ft_split(getenv("PATH"), ':');
-	init_env(env, &data.vars);
-	while (1)
+	data.path_exe = NULL;
+	if (argc == 1)
 	{
-		data.in = print_prompt();
-		data.in = check_for_quotes(data.in, data);
-		if (ft_strcmp(data.in, ""))
+		data.cmd_path = ft_split(getenv("PATH"), ':');
+		init_env(env, &data.vars);
+		while (1)
 		{
-			token(data.in, &data);
-			if (!ka(data))
+			data.in = print_prompt();
+			data.in = check_for_quotes(data.in, data);
+			if (ft_strcmp(data.in, ""))
 			{
-				id = fork();
-				if (id < 0)
-					error(ERROR_6);
-				else if (id == 0)
-					execute_cmd(data.s_n, &data);
-				else if (id > 0)
+				token(data.in, &data);
+				if (!ka(data))
 				{
-					waitpid(0, NULL, 0);
-					unlink("here_doc.txt");
+					id = fork();
+					if (id < 0)
+						error(ERROR_6);
+					else if (id == 0)
+						execute_cmd(data.s_n, &data);
+					else if (id > 0)
+					{
+						waitpid(0, NULL, 0);
+						unlink("here_doc.txt");
+					}
 				}
+				free(data.in);
 			}
-			free(data.in);
 		}
 	}
+	else
+		error(argv[1]);
+	return (0);
 }
 
 int	ka(t_data data)
@@ -54,20 +59,20 @@ int	ka(t_data data)
 	if (data.s_n->type == EXECVE)
 	{
 		cmd = (t_exe *)data.s_n;
-		if (!ft_strncmp(cmd->argv[0], "export", ft_strlen(cmd->argv[0])))
+		if (!ft_strcmp(cmd->argv[0], "export"))
 		{
+			printf("argv = %s\n", cmd->argv[0]);
 			exe_export(&data, cmd);
-			return (1);
 		}
-		else if (!ft_strncmp(cmd->argv[0], "exit", ft_strlen(cmd->argv[0])))
-		{
-			exe_exit();
-			return (1);
-		}
-		else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
+		else if (!ft_strcmp(cmd->argv[0], "exit"))
+			exe_exit(data);
+		else if (!ft_strcmp(cmd->argv[0], "unset"))
 			exe_unset(&data, cmd);
-		// else if (!ft_strncmp(cmd->argv[0], "cd", ft_strlen(cmd->argv[0])))
-		// 	exe_export(&data, cmd);
+		else if (!ft_strcmp(cmd->argv[0], "cd"))
+			exe_cd(cmd->argv[1]);
+		else
+			return (0);
+		return (1);
 	}
 	return (0);
 }
@@ -91,26 +96,26 @@ void	execute_cmd(t_cmd *t, t_data *data)
 	cmd3 = NULL;
 	if (t->type == EXECVE)
 	{
-		fprintf(stderr, "exe\n");
+		// fprintf(stderr, "exe\n");
 		cmd = (t_exe *)t;
 		exe_execve(data, cmd);
 		//exit(0);
 	}
 	else if (t->type == PIPE)
 	{
-		fprintf(stderr, "pipe\n");
+		// fprintf(stderr, "pipe\n");
 		cmd1 = (t_pipe *)t;
 		exe_pipe(data, cmd1);
 	}
 	else if (t->type == REDIR)
 	{
 		cmd2 = (t_redir *)t;
-		fprintf(stderr, "redir %i %s\n", cmd2->fd, cmd2->f);
+		// fprintf(stderr, "redir %i %s\n", cmd2->fd, cmd2->f);
 		exe_redir(data, cmd2);
 	}
 	else if (t->type == HERE)
 	{
-		fprintf(stderr, "here\n");
+		// fprintf(stderr, "here\n");
 		cmd3 = (t_here_doc *)t;
 		exe_here_doc(data, cmd3);
 	}

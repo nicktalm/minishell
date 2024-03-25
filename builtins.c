@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/22 21:19:44 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:15:52 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,15 @@ void	exe_pwd(void)
 	free(cwd);
 }
 
-void	exe_exit(void)
+void	exe_exit(t_data data)
 {
+	freeup(data.cmd_path);
+	if (data.exe)
+		free_exe((t_exe *)data.exe);
+	free(data.in);
+	free_ast(data.s_n);
+	free_lst(&data.vars);
+	free(data.path_exe);
 	exit(0);
 }
 
