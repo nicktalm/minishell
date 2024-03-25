@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 10:28:27 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/23 00:09:27 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/25 18:16:47 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,7 @@ char	*wait_for_input(char quote, char *input, t_data data)
 	{
 		free(rest);
 		rest = readline(quote_prompt);
-		tmp = ft_strjoin(new_input, rest);
-		free(new_input);
+		tmp = free_used_string(new_input, rest, 1, 0);
 		new_input = ft_strdup(tmp);
 		free(tmp);
 	}
