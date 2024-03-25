@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
 /*   Updated: 2024/03/25 17:31:14 by lbohm            ###   ########.fr       */
@@ -45,6 +45,7 @@ typedef struct s_data
 	struct s_cmd	*s_n;
 	char			*in;
 	struct s_var	*vars;
+	struct s_var	*export;
 	struct s_cmd	*exe;
 	char			*path_exe;
 }				t_data;
@@ -83,11 +84,13 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
-void	exe_export(t_data *data, t_exe *cmd);
+void	exe_export(t_data *vars, t_exe *cmd);
 void	check_for_bultin(t_data *data, t_exe *cmd);
 void	ft_lstdelone_new(t_var **head, t_var *node_to_remove, void (*del)(void *));
 void	del(void *var);
 void	exe_unset(t_data *data, t_exe *cmd);
+void	exe_echo(t_exe *cmd);
+void	print_export(t_var *export);
 
 // global varible
 
@@ -98,7 +101,7 @@ int		Signal;
 int		main(int argc, char **argv, char **env);
 void	error(char *msg);
 void	execute_cmd(t_cmd *t, t_data *data);
-int		ka(t_data data);
+int		ka(t_data *data);
 
 // cmd_prompt
 

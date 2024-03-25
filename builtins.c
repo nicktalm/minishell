@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/25 15:15:52 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/25 18:32:32 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,13 @@ void	exe_export(t_data *data, t_exe *cmd)
 	char	*name_to_search;
 	int		len_name;
 
-	ptr = data->vars;
+	ptr = data->export;
+	if (cmd->argv[1] == NULL)
+	{
+		printf("test\n");
+		print_export(data->export);
+		exit (0);
+	}
 	if (ft_strchr(cmd->argv[1], '='))
 	{
 		len_name = (ft_strlen(cmd->argv[1])
@@ -132,6 +138,48 @@ void	exe_unset(t_data *data, t_exe *cmd)
 			ft_lstdelone_new(&(data->vars), ptr, del);
 			break ;
 		}
+		ptr = ptr->nxt;
+	}
+}
+
+void	exe_echo(t_exe *cmd)
+{
+	int	nline;
+	int	i;
+
+	nline = 0;
+	i = 1;
+	if (cmd->argv[1] == NULL)
+		exit (0);
+	if (ft_strcmp(cmd->argv[1], "-n") == 0)
+	{
+		nline = 1;
+		i = 2;
+	}
+	while (cmd->argv[i] != NULL)
+	{
+		printf("%s", cmd->argv[i]);
+		if (cmd->argv[i + 1] != NULL)
+			printf(" ");
+		i++;
+	}
+	if (nline == 0)
+		printf("\n");
+}
+
+void	print_export(t_var *export)
+{
+	t_var	*ptr;
+
+	ptr = export;
+	if (export == NULL || export->name == NULL)
+	{
+		printf("Keine Umgebungsvariablen vorhanden.\n");
+		return ;
+	}
+	while (ptr != NULL)
+	{
+		printf("declare -x %s=%s\n", ptr->name, ptr->value);
 		ptr = ptr->nxt;
 	}
 }
