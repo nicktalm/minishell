@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/22 11:19:07 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/23 18:29:43 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		data.in = print_prompt();
-		data.in = check_for_quotes(data.in);
-		if (ft_strncmp(data.in, "", ft_strlen(data.in)))
+		data.in = check_for_quotes(data.in, data);
+		if (ft_strcmp(data.in, ""))
 		{
 			token(data.in, &data);
 			if (!ka(data))
@@ -91,26 +91,26 @@ void	execute_cmd(t_cmd *t, t_data *data)
 	cmd3 = NULL;
 	if (t->type == EXECVE)
 	{
-		//fprintf(stderr, "exe\n");
+		fprintf(stderr, "exe\n");
 		cmd = (t_exe *)t;
 		exe_execve(data, cmd);
 		//exit(0);
 	}
 	else if (t->type == PIPE)
 	{
-		//fprintf(stderr, "pipe\n");
+		fprintf(stderr, "pipe\n");
 		cmd1 = (t_pipe *)t;
 		exe_pipe(data, cmd1);
 	}
 	else if (t->type == REDIR)
 	{
 		cmd2 = (t_redir *)t;
-		//fprintf(stderr, "redir %i\n", cmd2->fd);
+		fprintf(stderr, "redir %i %s\n", cmd2->fd, cmd2->f);
 		exe_redir(data, cmd2);
 	}
 	else if (t->type == HERE)
 	{
-		//fprintf(stderr, "here\n");
+		fprintf(stderr, "here\n");
 		cmd3 = (t_here_doc *)t;
 		exe_here_doc(data, cmd3);
 	}

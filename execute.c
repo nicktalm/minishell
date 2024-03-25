@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/22 12:36:13 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/23 00:11:04 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ void	exe_here_doc(t_data *data, t_here_doc *cmd)
 		if (!(ft_strncmp(input, cmd->l, ft_strlen(input) - 1)))
 			break ;
 		if ((ft_strchr(input, '$')))
-			input = check_env(input, ft_strlen(input) - (ft_strlen(ft_strchr(input, '$')) - 1));
+			input = check_env(input, ft_strlen(input) - (ft_strlen(ft_strchr(input, '$')) - 1), *data);
 		ft_putstr_fd(ft_strjoin(input, "\n"), fdd);
 		free(input);
 	}

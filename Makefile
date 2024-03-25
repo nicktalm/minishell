@@ -1,5 +1,5 @@
 NAME = minishell
-CFLAGS = -Wall -Werror -Wextra
+# CFLAGS = -Wall -Werror -Wextra
 LDFLAGS = -lreadline -lncurses -fsanitize=address
 SRCS = minishell.c \
 		cmd_prompt.c \

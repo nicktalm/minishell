@@ -6,7 +6,7 @@
 /*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:11:20 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/20 16:13:24 by lucabohn         ###   ########.fr       */
+/*   Updated: 2024/03/23 18:44:37 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,36 @@ void	token(char *input, t_data *data)
 	q = NULL;
 	eq = NULL;
 	data->s_n = NULL;
+	data->exe = NULL;
 	while (*s)
 	{
 		token = get_token(&s, &q, &eq);
+		printf("token = %c\n", token);
 		if (token == '|')
 		{
 			if (check_next(s, 'a'))
 			{
 				get_token(&s, &q, &eq);
-				data->s_n = fill_pipe(data->s_n, fill_exe(&q, &eq, input, &s));
+				data->exe = fill_exe(&q, &eq, input, &s);
+				if (check_next(s, '<'))
+				{
+					get_token(&s, &q, &eq);
+					data->s_n = fill_pipe(data->s_n, fill_redir(&s, &q, &eq, data));
+				}
+				else
+					data->s_n = fill_pipe(data->s_n, data->exe);
+			}
+			else if (check_next(s, '<') || check_next(s, '>')
+				|| check_next(s, '+'))
+			{
+				
+			}
+			else if (check_next(s, '-'))
+			{
+				
 			}
 		}
-		else if (token == '>')
-			data->s_n = fill_redir(&s, &q, &eq, data);
-		else if (token == '<')
-			data->s_n = fill_redir(&s, &q, &eq, data);
-		else if (token == '+')
+		else if (token == '>' || token == '<' || token == '+')
 			data->s_n = fill_redir(&s, &q, &eq, data);
 		else if (token == '-')
 			data->s_n = fill_here_doc(&s, &q, &eq, data);
@@ -51,35 +65,27 @@ char	get_token(char **s, char **q, char **eq)
 {
 	char	*isspace;
 	char	ret;
-	char	*e;
 
-	e = *s + ft_strlen(*s);
 	isspace = " \t\n\v\f\r";
-	while (ft_strchr(isspace, **s) && **s != *e)
+	while (ft_strchr(isspace, **s) && **s != '\0')
 		(*s)++;
 	if (q)
 		*q = *s;
-	if (**s == '|')
-		ret = '|';
-	else if (**s == '>')
-	{
-		ret = **s;
-		(*s)++;
-		if (**s == '>')
-			ret = '+';
-	}
-	else if (**s == '<')
-	{
-		ret = **s;
-		(*s)++;
-		if (**s == '<')
-			ret = '-';
-	}
-	else if (**s == *e)
+	if (**s == '\0')
 		return (0);
+	else if (!ft_strncmp(*s, "| ", 2) || !ft_strncmp(*s, "|", 2))
+		ret = '|';
+	else if (!ft_strncmp(*s, ">> ", 3) || !ft_strncmp(*s, ">>", 3))
+		ret = '+';
+	else if (!ft_strncmp(*s, "<< ", 3) || !ft_strncmp(*s, "<<", 3))
+		ret = '-';
+	else if (!ft_strncmp(*s, "< ", 2) || !ft_strncmp(*s, "<", 2))
+		ret = '<';
+	else if (!ft_strncmp(*s, "> ", 2) || !ft_strncmp(*s, ">", 2))
+		ret = '>';
 	else
 		ret = 'a';
-	while (!ft_strchr(isspace, **s) && **s != *e)
+	while (!ft_strchr(isspace, **s) && **s != '\0')
 		(*s)++;
 	if (eq)
 		*eq = *s;

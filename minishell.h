@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/22 12:35:45 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/23 18:13:47 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_data
 	struct s_cmd	*s_n;
 	char			*in;
 	struct s_var	*vars;
+	struct s_cmd	*exe;
 }				t_data;
 
 typedef struct s_cmd
@@ -107,21 +108,24 @@ char	*free_used_string(char *f, char *s, int ff, int sf);
 
 // quotes
 
-char	*check_for_quotes(char *input);
+char	*check_for_quotes(char *input, t_data data);
 void	double_or_single(int *d, int *s, char quote, int *first);
-char	*wait_for_input(char quote, char *input);
-char	*clean_input(char *input);
+char	*wait_for_input(char quote, char *input, t_data data);
+char	*clean_input(char *input, t_data data);
 void	clean_input_2(char *input, int i, int *quote);
 
 // quotes_2
 
 char	*check_env_2(char *ret, char *input, int start, int end);
-char	*check_env(char *input, int i);
+char	*check_env(char *input, int i, t_data data);
+char	*get_env(char *value, t_var **env);
+int	ft_strcmp(const char *s1, const char *s2);
 
 // token
 
 void	token(char *input, t_data *data);
 char	get_token(char **s, char **q, char **eq);
+int		check_token(char *letter, char token);
 int		check_next(char *s, char token);
 
 // fill_struct

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lucabohn <lucabohn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 14:36:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/19 10:39:00 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/23 00:06:12 by lucabohn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*check_env(char *input, int i)
+char	*check_env(char *input, int i, t_data data)
 {
 	char	*isspace;
 	int		start;
@@ -29,7 +29,7 @@ char	*check_env(char *input, int i)
 	value = ft_substr(input, start, end - start);
 	if (!ft_strncmp(value, "?", ft_strlen(value)))
 		printf("error code\n");
-	ret = getenv(value);
+	ret = get_env(value, &data.vars);
 	return (check_env_2(ret, input, start, end));
 }
 
@@ -55,4 +55,34 @@ char	*check_env_2(char *ret, char *input, int start, int end)
 		free(input);
 	}
 	return (ret);
+}
+
+char	*get_env(char *value, t_var **env)
+{
+	t_var	*lst;
+
+	lst = *env;
+	while (lst)
+	{
+		if (!ft_strcmp(lst->name, value))
+			return(lst->value);
+		lst = lst->nxt;
+	}
+	return (NULL);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	if (ft_strlen(s1) != ft_strlen(s2))
+		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	while (s1[i] != '\0')
+	{
+		if ((unsigned char)s1[i] != (unsigned char)s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
 }
