@@ -12,10 +12,47 @@
 
 #include "minishell.h"
 
-void	exe_cd(char *path)
+void	update_pwd(t_var *data)
 {
-	if (chdir(path))
-		error(ERROR_12);
+	t_var	*ptr;
+
+	ptr = data;
+	while (ptr != NULL)
+	{
+		if (!(ft_strncmp(ptr->name, "PWD", 3)))
+		{
+			free(ptr->value);
+			ptr->value = prompt_cwd();
+		}
+		ptr = ptr->nxt;
+	}
+}
+
+void	update_oldpwd(t_var *data)
+{
+	t_var	*ptr;
+
+	ptr = data;
+	while (ptr != NULL)
+	{
+		if (!(ft_strncmp(ptr->name, "OLDPWD", 6)))
+		{
+			free(ptr->value);
+			ptr->value = prompt_cwd();
+			return ;
+		}
+		ptr = ptr->nxt;
+	}
+	ft_lstadd_back_new(&data, ft_lstnew_new("OLDPWD", prompt_cwd()));
+}
+
+void	exe_cd(t_data *data, t_exe *cmd)
+{
+	update_oldpwd(data->vars);
+	update_oldpwd(data->export);
+	chdir(cmd->argv[1]);
+	update_pwd(data->vars);
+	update_pwd(data->export);
 }
 
 void	exe_pwd(void)
@@ -82,38 +119,35 @@ void	exe_env(t_var *vars)
 	}
 }
 
-void	exe_export(t_data *data, t_exe *cmd)
+void	exe_export_env(t_data *data, t_exe *cmd)
 {
-	t_var	*ptr;
+	t_var	*ptr_env;
 	char	*name_to_search;
 	int		len_name;
 
-	ptr = data->export;
+	ptr_env = data->vars;
 	if (cmd->argv[1] == NULL)
-	{
-		printf("test\n");
 		print_export(data->export);
-	}
 	else if (ft_strchr(cmd->argv[1], '='))
 	{
 		len_name = (ft_strlen(cmd->argv[1])
 				- ft_strlen(ft_strchr(cmd->argv[1], '=')));
 		name_to_search = ft_substr(cmd->argv[1], 0, len_name);
-		while (ptr != NULL)
+		while (ptr_env != NULL)
 		{
-			if (!(ft_strncmp(ptr->name, name_to_search,
+			if (!(ft_strncmp(ptr_env->name, name_to_search,
 						ft_strlen(name_to_search)))
-				&& !(ft_strncmp(ptr->name, name_to_search,
-						ft_strlen(ptr->name))))
+				&& !(ft_strncmp(ptr_env->name, name_to_search,
+						ft_strlen(ptr_env->name))))
 			{
-				free(ptr->value);
-				ptr->value = ft_substr(cmd->argv[1], len_name + 1,
+				free(ptr_env->value);
+				ptr_env->value = ft_substr(cmd->argv[1], len_name + 1,
 						ft_strlen(ft_strchr(cmd->argv[1], '=')));
 				break ;
 			}
-			ptr = ptr->nxt;
+			ptr_env = ptr_env->nxt;
 		}
-		if (ptr == NULL)
+		if (ptr_env == NULL)
 		{
 			ft_lstadd_back_new(&data->vars,
 				ft_lstnew_new(ft_substr(cmd->argv[1], 0, len_name),
@@ -123,21 +157,96 @@ void	exe_export(t_data *data, t_exe *cmd)
 	}
 }
 
-void	exe_unset(t_data *data, t_exe *cmd)
+void	exe_export_export(t_data *data, t_exe *cmd)
 {
-	t_var	*ptr;
+	t_var	*ptr_export;
+	char	*name_to_search;
+	int		len_name;
+
+	ptr_export = data->export;
+	if (cmd->argv[1] == NULL)
+		return ;
+	else if (ft_strchr(cmd->argv[1], '='))
+	{
+		len_name = (ft_strlen(cmd->argv[1])
+				- ft_strlen(ft_strchr(cmd->argv[1], '=')));
+		name_to_search = ft_substr(cmd->argv[1], 0, len_name);
+		while (ptr_export != NULL)
+		{
+			if (!(ft_strncmp(ptr_export->name, name_to_search,
+						ft_strlen(name_to_search)))
+				&& !(ft_strncmp(ptr_export->name, name_to_search,
+						ft_strlen(ptr_export->name))))
+			{
+				free(ptr_export->value);
+				ptr_export->value = ft_substr(cmd->argv[1], len_name + 1,
+						ft_strlen(ft_strchr(cmd->argv[1], '=')));
+				break ;
+			}
+			ptr_export = ptr_export->nxt;
+		}
+		if (ptr_export == NULL)
+		{
+			if (((ft_strchr(cmd->argv[1], '=')) + 1) == NULL)
+			{
+				ft_lstadd_back_new(&data->export,
+					ft_lstnew_new(ft_substr(cmd->argv[1], 0, len_name),
+						ft_strdup("")));
+			}
+			else
+				ft_lstadd_back_new(&data->export,
+					ft_lstnew_new(ft_substr(cmd->argv[1], 0, len_name),
+						ft_substr(cmd->argv[1], len_name + 1,
+							ft_strlen(ft_strchr(cmd->argv[1], '=')) + 1)));
+		}
+	}
+	else
+	{
+		len_name = (ft_strlen(cmd->argv[1]));
+		name_to_search = ft_substr(cmd->argv[1], 0, len_name);
+		while (ptr_export != NULL)
+		{
+			if (!(ft_strncmp(ptr_export->name, name_to_search,
+						ft_strlen(name_to_search)))
+				&& !(ft_strncmp(ptr_export->name, name_to_search,
+						ft_strlen(ptr_export->name))))
+				return ;
+			ptr_export = ptr_export->nxt;
+		}
+		ft_lstadd_back_new(&data->export,
+			ft_lstnew_new(ft_substr(cmd->argv[1], 0, ft_strlen(cmd->argv[1])),
+				ft_strdup("")));
+	}
+}
+
+void	 exe_unset(t_data *data, t_exe *cmd)
+{
+	t_var	*ptr_env;
+	t_var	*ptr_export;
 	char	*name_to_search;
 
-	ptr = data->vars;
+	ptr_env = data->vars;
+	ptr_export = data->export;
 	name_to_search = cmd->argv[1];
-	while (ptr != NULL)
+	while (ptr_env != NULL)
 	{
-		if (!ft_strncmp(ptr->name, name_to_search, ft_strlen(ptr->name)))
+		if (!ft_strncmp(ptr_env->name, name_to_search,
+				ft_strlen(ptr_env->name)))
 		{
-			ft_lstdelone_new(&(data->vars), ptr, del);
+			ft_lstdelone_new(&(data->vars), ptr_env, del);
 			break ;
 		}
-		ptr = ptr->nxt;
+		ptr_env = ptr_env->nxt;
+	}
+	while (ptr_export != NULL)
+	{
+		if (!ft_strncmp(ptr_export->name, name_to_search,
+				ft_strlen(ptr_export->name)))
+		{
+			ft_lstdelone_new(&(data->export), ptr_export, del);
+			break ;
+		}
+		ptr_export = ptr_export->nxt;
 	}
 }
 
@@ -178,7 +287,7 @@ void	print_export(t_var *export)
 	}
 	while (ptr != NULL)
 	{
-		printf("declare -x %s=%s\n", ptr->name, ptr->value);
+		printf("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
 		ptr = ptr->nxt;
 	}
 }

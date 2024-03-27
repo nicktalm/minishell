@@ -25,8 +25,12 @@ void	exe_execve(t_data *data, t_exe *cmd)
 void	check_for_bultin(t_data *data, t_exe *cmd)
 {
 	if (!ft_strcmp(cmd->argv[0], "export"))
-		exe_export(data, cmd);
+	{
+		exe_export_env(data, cmd);
+		exe_export_export(data, cmd);
+	}
 	else if (!ft_strcmp(cmd->argv[0], "env"))
+	{
 		exe_env(data->vars);
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		exe_unset(data, cmd);
