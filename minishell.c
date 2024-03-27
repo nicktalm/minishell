@@ -22,8 +22,8 @@ int	main(int argc, char **argv, char **env)
 	data.path_exe = NULL;
 	if (argc == 1)
 	{
-		data.cmd_path = ft_split(getenv("PATH"), ':');
 		init_env(env, &data.vars);
+		data.cmd_path = ft_split(get_env("PATH", &data.vars), ':');
 		init_env(env, &data.export);
 		// sort_export(&data.export);
 		while (1)
@@ -88,38 +88,12 @@ void	error(char *msg)
 
 void	execute_cmd(t_cmd *t, t_data *data)
 {
-	t_exe		*cmd;
-	t_pipe		*cmd1;
-	t_redir		*cmd2;
-	t_here_doc	*cmd3;
-
-	cmd = NULL;
-	cmd1 = NULL;
-	cmd2 = NULL;
-	cmd3 = NULL;
 	if (t->type == EXECVE)
-	{
-		// fprintf(stderr, "exe\n");
-		cmd = (t_exe *)t;
-		exe_execve(data, cmd);
-		//exit(0);
-	}
+		exe_execve(data, (t_exe *)t);
 	else if (t->type == PIPE)
-	{
-		// fprintf(stderr, "pipe\n");
-		cmd1 = (t_pipe *)t;
-		exe_pipe(data, cmd1);
-	}
+		exe_pipe(data, (t_pipe *)t);
 	else if (t->type == REDIR)
-	{
-		cmd2 = (t_redir *)t;
-		// fprintf(stderr, "redir %i %s\n", cmd2->fd, cmd2->f);
-		exe_redir(data, cmd2);
-	}
+		exe_redir(data, (t_redir *)t);
 	else if (t->type == HERE)
-	{
-		// fprintf(stderr, "here\n");
-		cmd3 = (t_here_doc *)t;
-		exe_here_doc(data, cmd3);
-	}
+		exe_here_doc(data, (t_here_doc *)t);
 }
