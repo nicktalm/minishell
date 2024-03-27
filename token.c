@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:11:20 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/25 17:00:44 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 10:54:06 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,7 @@ void	token(char *input, t_data *data)
 			{
 				get_token(&s, &q, &eq);
 				if (check_next(s, 'a'))
-				{
-					printf("here\n");
 					data->exe = fill_exe(0, 0, 0, 0);
-					printf("here2\n");
-				}
 				data->s_n = fill_pipe(data->s_n, fill_redir(&s, &q, &eq, data));
 			}
 			else if (check_next(s, '-'))
@@ -96,7 +92,14 @@ char	get_token(char **s, char **q, char **eq)
 	else if (!ft_strncmp(*s, "> ", 2) || !ft_strncmp(*s, ">", 2))
 		ret = '>';
 	else
+	{
 		ret = 'a';
+		if (**s == '"' || **s == '\'')
+		{
+			find_end(s, q, eq, **s);
+			return (ret);
+		}
+	}
 	while (!ft_strchr(isspace, **s) && **s != '\0')
 		(*s)++;
 	*eq = *s;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/25 18:37:31 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 17:34:21 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@ int	main(int argc, char **argv, char **env)
 	data.path_exe = NULL;
 	if (argc == 1)
 	{
+		Signal = 0;
 		init_env(env, &data.vars);
 		data.cmd_path = ft_split(get_env("PATH", &data.vars), ':');
 		init_env(env, &data.export);
-		printf("%s\n", data.export->name);
-		printf("%s\n", data.export->value);
-		// sort_export(&data.export);
 		while (1)
 		{
 			data.in = print_prompt();
 			data.in = check_for_quotes(data.in, data);
+			//printf("input = %s\n", data.in);
 			if (ft_strcmp(data.in, ""))
 			{
 				token(data.in, &data);
@@ -64,12 +63,9 @@ int	ka(t_data *data)
 	if (data->s_n->type == EXECVE)
 	{
 		cmd = (t_exe *)data->s_n;
-		// if (!ft_strcmp(cmd->argv[0], "export"))
-		// {
-		// 	// printf("argv = %s\n", data.export->name);
-		// 	exe_export(data, cmd);
-		// }
-		if (!ft_strcmp(cmd->argv[0], "exit"))
+		if (!ft_strcmp(cmd->argv[0], "export"))
+			exe_export(data, cmd);
+		else if (!ft_strcmp(cmd->argv[0], "exit"))
 			exe_exit(*data);
 		else if (!ft_strcmp(cmd->argv[0], "unset"))
 			exe_unset(data, cmd);
@@ -84,8 +80,10 @@ int	ka(t_data *data)
 
 void	error(char *msg)
 {
+	printf("%i\n", errno);
 	perror(msg);
-	exit(0);
+	perror(strerror(errno));
+	exit(errno);
 }
 
 void	execute_cmd(t_cmd *t, t_data *data)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/25 17:31:14 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:02:46 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_data
 	struct s_var	*export;
 	struct s_cmd	*exe;
 	char			*path_exe;
+	int				exit_code;
 }				t_data;
 
 typedef struct s_cmd
@@ -113,12 +114,19 @@ char	*free_used_string(char *f, char *s, int ff, int sf);
 // quotes
 
 char	*check_for_quotes(char *input, t_data data);
+char	*clean_input(char *input);
+int		clean_size(char *input);
 void	double_or_single(int *d, int *s, char quote, int *first);
-char	*wait_for_input(char quote, char *input, t_data data);
-char	*clean_input(char *input, t_data data);
-void	clean_input_2(char *input, int i, int *quote);
+void	find_end(char **s, char **q, char **eq, char quote);
+// char	*quote_input(char *input);
+// int		len_w_q(char *input);
+// char	*wait_for_input(char quote, char *input, t_data data);
+// char	*clean_input(char *input, t_data data);
+// void	clean_input_2(int *quote);
+// char	*trim_input(char *input);
+// int		len_wout_q(char *input);
 
-// quotes_2
+// quotes_utils
 
 char	*check_env_2(char *ret, char *input, int start, int end);
 char	*check_env(char *input, int i, t_data data);
@@ -129,7 +137,6 @@ int		ft_strcmp(const char *s1, const char *s2);
 
 void	token(char *input, t_data *data);
 char	get_token(char **s, char **q, char **eq);
-int		check_token(char *letter, char token);
 int		check_next(char *s, char token);
 
 // fill_struct

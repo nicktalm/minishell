@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/25 18:32:32 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/26 11:15:28 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,8 @@ void	exe_export(t_data *data, t_exe *cmd)
 	{
 		printf("test\n");
 		print_export(data->export);
-		exit (0);
 	}
-	if (ft_strchr(cmd->argv[1], '='))
+	else if (ft_strchr(cmd->argv[1], '='))
 	{
 		len_name = (ft_strlen(cmd->argv[1])
 				- ft_strlen(ft_strchr(cmd->argv[1], '=')));
