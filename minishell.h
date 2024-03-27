@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/25 17:31:14 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:43:46 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
-void	exe_export(t_data *vars, t_exe *cmd);
+void	exe_export_env(t_data *data, t_exe *cmd);
+void	exe_export_export(t_data *data, t_exe *cmd);
 void	check_for_bultin(t_data *data, t_exe *cmd);
 void	ft_lstdelone_new(t_var **head, t_var *node_to_remove, void (*del)(void *));
 void	del(void *var);
@@ -160,7 +161,7 @@ void	exe_here_doc(t_data *data, t_here_doc *cmd);
 
 // builtins
 
-void	exe_cd(char *path);
+void	exe_cd(t_data *data, t_exe *cmd);
 void	exe_pwd(void);
 void	exe_exit(t_data data);
 void	ctrl_c(int signal);

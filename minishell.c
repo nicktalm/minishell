@@ -6,7 +6,7 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/25 18:37:31 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:42:36 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ int	main(int argc, char **argv, char **env)
 		init_env(env, &data.vars);
 		data.cmd_path = ft_split(get_env("PATH", &data.vars), ':');
 		init_env(env, &data.export);
-		printf("%s\n", data.export->name);
-		printf("%s\n", data.export->value);
 		// sort_export(&data.export);
 		while (1)
 		{
@@ -64,17 +62,17 @@ int	ka(t_data *data)
 	if (data->s_n->type == EXECVE)
 	{
 		cmd = (t_exe *)data->s_n;
-		// if (!ft_strcmp(cmd->argv[0], "export"))
-		// {
-		// 	// printf("argv = %s\n", data.export->name);
-		// 	exe_export(data, cmd);
-		// }
-		if (!ft_strcmp(cmd->argv[0], "exit"))
+		if (!ft_strcmp(cmd->argv[0], "export"))
+		{
+			exe_export_env(data, cmd);
+			exe_export_export(data, cmd);
+		}
+		else if (!ft_strcmp(cmd->argv[0], "exit"))
 			exe_exit(*data);
 		else if (!ft_strcmp(cmd->argv[0], "unset"))
 			exe_unset(data, cmd);
 		else if (!ft_strcmp(cmd->argv[0], "cd"))
-			exe_cd(cmd->argv[1]);
+			exe_cd(data, cmd);
 		else
 			return (0);
 		return (1);
