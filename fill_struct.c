@@ -72,8 +72,8 @@ t_cmd	*fill_pipe(t_cmd *l, t_cmd *r)
 	// 	redir->cmd = (t_cmd *)cmd;
 	// 	return ((t_cmd *)redir);
 	// }
-	fprintf(stderr, "left = %i\n", l->type);
-	fprintf(stderr, "right = %i\n", r->type);
+	// fprintf(stderr, "left = %i\n", l->type);
+	// fprintf(stderr, "right = %i\n", r->type);
 	cmd->left = l;
 	cmd->right = r;
 	return ((t_cmd *)cmd);

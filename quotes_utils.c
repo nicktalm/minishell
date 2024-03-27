@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 14:36:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/25 15:12:12 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 17:57:35 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,16 @@ char	*check_env(char *input, int i, t_data data)
 		i++;
 	end = i;
 	value = ft_substr(input, start, end - start);
-	if (!ft_strncmp(value, "?", ft_strlen(value)))
-		printf("error code\n");
-	ret = get_env(value, &data.vars);
-	return (check_env_2(ret, input, start, end));
+	if (ft_strcmp(value, ""))
+	{
+		if (!ft_strcmp(value, "?"))
+			ret = ft_itoa(Signal);
+		else
+			ret = get_env(value, &data.vars);
+		return (check_env_2(ret, input, start, end));
+	}
+	else
+		return (input);
 }
 
 char	*check_env_2(char *ret, char *input, int start, int end)
@@ -65,7 +71,7 @@ char	*get_env(char *value, t_var **env)
 	while (lst)
 	{
 		if (!ft_strcmp(lst->name, value))
-			return(lst->value);
+			return (lst->value);
 		lst = lst->nxt;
 	}
 	return (NULL);
@@ -77,7 +83,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 	i = 0;
 	if (ft_strlen(s1) != ft_strlen(s2))
-		return ((unsigned char)s1 - (unsigned char)s2);
+		return (-1);
 	while (s1[i] != '\0')
 	{
 		if ((unsigned char)s1[i] != (unsigned char)s2[i])

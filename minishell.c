@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
 /*   Updated: 2024/03/27 12:42:36 by ntalmon          ###   ########.fr       */
@@ -22,6 +22,7 @@ int	main(int argc, char **argv, char **env)
 	data.path_exe = NULL;
 	if (argc == 1)
 	{
+		Signal = 0;
 		init_env(env, &data.vars);
 		data.cmd_path = ft_split(get_env("PATH", &data.vars), ':');
 		init_env(env, &data.export);
@@ -30,6 +31,7 @@ int	main(int argc, char **argv, char **env)
 		{
 			data.in = print_prompt();
 			data.in = check_for_quotes(data.in, data);
+			//printf("input = %s\n", data.in);
 			if (ft_strcmp(data.in, ""))
 			{
 				token(data.in, &data);
@@ -82,8 +84,10 @@ int	ka(t_data *data)
 
 void	error(char *msg)
 {
+	printf("%i\n", errno);
 	perror(msg);
-	exit(0);
+	perror(strerror(errno));
+	exit(errno);
 }
 
 void	execute_cmd(t_cmd *t, t_data *data)

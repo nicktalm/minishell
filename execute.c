@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/26 13:20:04 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/27 12:37:34 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,28 @@ void	exe_execve(t_data *data, t_exe *cmd)
 	check_for_bultin(data, cmd);
 	data->path_exe = check_for_access(*data, cmd->argv);
 	if (!(data->path_exe))
-		error(ERROR_8);
+		error(cmd->argv[0]);
 	if (execve(data->path_exe, cmd->argv, data->cmd_path) == -1)
-		error(ERROR_4);
+		error(cmd->argv[0]);
 }
 
 void	check_for_bultin(t_data *data, t_exe *cmd)
 {
-	if (!ft_strncmp(cmd->argv[0], "export", ft_strlen(cmd->argv[0])))
+	if (!ft_strcmp(cmd->argv[0], "export"))
 	{
 		exe_export_env(data, cmd);
 		exe_export_export(data, cmd);
 	}
-	else if (!ft_strncmp(cmd->argv[0], "env", ft_strlen(cmd->argv[0])))
+	else if (!ft_strcmp(cmd->argv[0], "env"))
 	{
 		exe_env(data->vars);
-		exit (0);
-	}
-	else if (!ft_strncmp(cmd->argv[0], "unset", ft_strlen(cmd->argv[0])))
-	{
+	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		exe_unset(data, cmd);
-		exit (0);
-	}
-	else if (!ft_strncmp(cmd->argv[0], "echo", ft_strlen(cmd->argv[0])))
-	{
+	else if (!ft_strcmp(cmd->argv[0], "echo"))
 		exe_echo(cmd);
-		exit (0);
-	}
+	else
+		return ;
+	exit (0);
 }
 
 char	*check_for_access(t_data data, char **cmd)
