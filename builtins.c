@@ -6,13 +6,29 @@
 /*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/27 15:53:22 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/27 17:37:20 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	update_pwd(t_var *data, t_exe *cmd)
+void	update_pwd(t_var *data)
+{
+	t_var	*ptr;
+
+	ptr = data;
+	while (ptr != NULL)
+	{
+		if (!(ft_strncmp(ptr->name, "PWD", 3)))
+		{
+			free(ptr->value);
+			ptr->value = prompt_cwd();
+		}
+		ptr = ptr->nxt;
+	}
+}
+
+void	update_oldpwd(t_var *data)
 {
 	t_var	*ptr;
 
@@ -23,23 +39,20 @@ void	update_pwd(t_var *data, t_exe *cmd)
 		{
 			free(ptr->value);
 			ptr->value = prompt_cwd();
-			break ;
-		}
-		chdir(cmd->argv[1]);
-		if (!(ft_strncmp(ptr->name, "PWD", 3)))
-		{
-			free(ptr->value);
-			ptr->value = prompt_cwd();
-			break ;
+			return ;
 		}
 		ptr = ptr->nxt;
 	}
+	ft_lstadd_back_new(&data, ft_lstnew_new("OLDPWD", prompt_cwd()));
 }
 
 void	exe_cd(t_data *data, t_exe *cmd)
 {
-	update_pwd(data->vars, cmd);
-	update_pwd(data->export, cmd);
+	update_oldpwd(data->vars);
+	update_oldpwd(data->export);
+	chdir(cmd->argv[1]);
+	update_pwd(data->vars);
+	update_pwd(data->export);
 }
 
 void	exe_pwd(void)
