@@ -11,7 +11,8 @@ SRCS = minishell.c \
 		execute.c \
 		builtins.c \
 		init_env.c \
-		free.c
+		free.c \
+		sort_export.c
 OBJS = $(SRCS:.c=.o)
 PATHLIBFT = lib/libft/
 INLIBFT = -L $(PATHLIBFT) -lft

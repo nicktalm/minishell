@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 10:28:27 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/27 18:02:21 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/28 09:33:24 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ char	*check_for_quotes(char *input, t_data data)
 	}
 	if ((double_q == 1 && first == 100) || (single_q == 1 && first == 115))
 		perror("input error\n");
-	// printf("input first = %s\n", input);
 	return (clean_input(input));
 }
 

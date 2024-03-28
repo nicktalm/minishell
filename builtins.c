@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/26 11:15:28 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/28 18:27:14 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,10 @@ void	exe_pwd(void)
 	free(cwd);
 }
 
-void	exe_exit(t_data data)
+void	exe_exit(t_data data, t_exe *cmd)
 {
+	if (cmd->argv[1] != 0)
+		Signal = ft_atoi(cmd->argv[1]);
 	freeup(data.cmd_path);
 	if (data.exe)
 		free_exe((t_exe *)data.exe);
@@ -90,17 +92,17 @@ void	exe_exit(t_data data)
 	free_ast(data.s_n);
 	free_lst(&data.vars);
 	free(data.path_exe);
-	exit(0);
+	exit(Signal);
 }
 
-// void	ctrl_c(int signal)
-// {
-// 	signal = 0;
-// 	printf("\n");
-// 	rl_on_new_line();
-// 	rl_replace_line("", 0);
-// 	rl_redisplay();
-// }
+void	ctrl_c(int signal)
+{
+	signal = 0;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
 void	exe_env(t_var *vars)
 {
