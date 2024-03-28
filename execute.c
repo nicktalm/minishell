@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:04:24 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/27 12:37:34 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:26:16 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ void	check_for_bultin(t_data *data, t_exe *cmd)
 		exe_export_export(data, cmd);
 	}
 	else if (!ft_strcmp(cmd->argv[0], "env"))
-	{
 		exe_env(data->vars);
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		exe_unset(data, cmd);
 	else if (!ft_strcmp(cmd->argv[0], "echo"))
 		exe_echo(cmd);
+	else if (!ft_strcmp(cmd->argv[0], "pwd"))
+		exe_pwd();
 	else
 		return ;
 	exit (0);

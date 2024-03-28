@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntalmon <ntalmon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:56:03 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/26 11:15:28 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/28 18:36:37 by ntalmon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,60 +162,65 @@ void	exe_export_export(t_data *data, t_exe *cmd)
 	t_var	*ptr_export;
 	char	*name_to_search;
 	int		len_name;
+	int		i;
 
+	i = 1;
 	ptr_export = data->export;
 	if (cmd->argv[1] == NULL)
 		return ;
-	else if (ft_strchr(cmd->argv[1], '='))
+	while (cmd->argv[i])
 	{
-		len_name = (ft_strlen(cmd->argv[1])
-				- ft_strlen(ft_strchr(cmd->argv[1], '=')));
-		name_to_search = ft_substr(cmd->argv[1], 0, len_name);
-		while (ptr_export != NULL)
+		if (ft_strchr(cmd->argv[i], '='))
 		{
-			if (!(ft_strncmp(ptr_export->name, name_to_search,
-						ft_strlen(name_to_search)))
-				&& !(ft_strncmp(ptr_export->name, name_to_search,
-						ft_strlen(ptr_export->name))))
+			len_name = (ft_strlen(cmd->argv[i])
+					- ft_strlen(ft_strchr(cmd->argv[i], '=')));
+			name_to_search = ft_substr(cmd->argv[i], 0, len_name);
+			while (ptr_export != NULL)
 			{
-				free(ptr_export->value);
-				ptr_export->value = ft_substr(cmd->argv[1], len_name + 1,
-						ft_strlen(ft_strchr(cmd->argv[1], '=')));
-				break ;
+				if (!(ft_strncmp(ptr_export->name, name_to_search,
+							ft_strlen(name_to_search)))
+					&& !(ft_strncmp(ptr_export->name, name_to_search,
+							ft_strlen(ptr_export->name))))
+				{
+					free(ptr_export->value);
+					ptr_export->value = ft_substr(cmd->argv[i], len_name + 1,
+							ft_strlen(ft_strchr(cmd->argv[i], '=')));
+					break ;
+				}
+				ptr_export = ptr_export->nxt;
 			}
-			ptr_export = ptr_export->nxt;
-		}
-		if (ptr_export == NULL)
-		{
-			if (((ft_strchr(cmd->argv[1], '=')) + 1) == NULL)
+			if (ptr_export == NULL)
 			{
-				ft_lstadd_back_new(&data->export,
-					ft_lstnew_new(ft_substr(cmd->argv[1], 0, len_name),
-						ft_strdup("")));
+				if (((ft_strchr(cmd->argv[i], '=')) + 1) == NULL)
+				{
+					ft_lstadd_back_new(&data->export,
+						ft_lstnew_new(ft_substr(cmd->argv[i], 0, len_name),
+							ft_strdup("")));
+				}
+				else
+					ft_lstadd_back_new(&data->export,
+						ft_lstnew_new(ft_substr(cmd->argv[i], 0, len_name),
+							ft_substr(cmd->argv[i], len_name + 1,
+								ft_strlen(ft_strchr(cmd->argv[i], '=')) + 1)));
 			}
-			else
-				ft_lstadd_back_new(&data->export,
-					ft_lstnew_new(ft_substr(cmd->argv[1], 0, len_name),
-						ft_substr(cmd->argv[1], len_name + 1,
-							ft_strlen(ft_strchr(cmd->argv[1], '=')) + 1)));
 		}
-	}
-	else
-	{
-		len_name = (ft_strlen(cmd->argv[1]));
-		name_to_search = ft_substr(cmd->argv[1], 0, len_name);
-		while (ptr_export != NULL)
+		else
 		{
-			if (!(ft_strncmp(ptr_export->name, name_to_search,
-						ft_strlen(name_to_search)))
-				&& !(ft_strncmp(ptr_export->name, name_to_search,
-						ft_strlen(ptr_export->name))))
-				return ;
-			ptr_export = ptr_export->nxt;
+			len_name = (ft_strlen(cmd->argv[i]));
+			name_to_search = ft_substr(cmd->argv[i], 0, len_name);
+			while (ptr_export != NULL)
+			{
+				if (!(ft_strcmp(ptr_export->name, name_to_search)))
+					break ;
+				ptr_export = ptr_export->nxt;
+			}
+			if (ptr_export == NULL)
+				ft_lstadd_back_new(&data->export,
+					ft_lstnew_new(ft_substr(cmd->argv[i], 0,
+							ft_strlen(cmd->argv[i])),
+						NULL));
 		}
-		ft_lstadd_back_new(&data->export,
-			ft_lstnew_new(ft_substr(cmd->argv[1], 0, ft_strlen(cmd->argv[1])),
-				ft_strdup("")));
+		i++;
 	}
 }
 
@@ -230,8 +235,7 @@ void	 exe_unset(t_data *data, t_exe *cmd)
 	name_to_search = cmd->argv[1];
 	while (ptr_env != NULL)
 	{
-		if (!ft_strncmp(ptr_env->name, name_to_search,
-				ft_strlen(ptr_env->name)))
+		if (!ft_strcmp(ptr_env->name, name_to_search))
 		{
 			ft_lstdelone_new(&(data->vars), ptr_env, del);
 			break ;
@@ -240,8 +244,7 @@ void	 exe_unset(t_data *data, t_exe *cmd)
 	}
 	while (ptr_export != NULL)
 	{
-		if (!ft_strncmp(ptr_export->name, name_to_search,
-				ft_strlen(ptr_export->name)))
+		if (!ft_strcmp(ptr_export->name, name_to_search))
 		{
 			ft_lstdelone_new(&(data->export), ptr_export, del);
 			break ;
@@ -287,7 +290,10 @@ void	print_export(t_var *export)
 	}
 	while (ptr != NULL)
 	{
-		printf("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
+		if (ptr->value == NULL)
+			printf("declare -x %s\n", ptr->name);
+		else if (ptr->value != NULL)
+			printf("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
 		ptr = ptr->nxt;
 	}
 }
