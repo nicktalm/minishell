@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 14:36:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/27 17:57:35 by lbohm            ###   ########.fr       */
+/*   Updated: 2024/03/28 09:20:00 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,34 @@ char	*check_env(char *input, int i, t_data data)
 	end = 0;
 	isspace = " \t\n\v\f\r\0";
 	start = i;
-	while (!ft_strchr(isspace, input[i]) && input[i] != '"' && input[i] != 39)
-		i++;
-	end = i;
-	value = ft_substr(input, start, end - start);
+	if (input[i] != '?')
+	{
+		while (!ft_strchr(isspace, input[i]) && input[i] != '"' && input[i] != 39)
+			i++;
+		end = i;
+		value = ft_substr(input, start, end - start);
+	}
+	else
+	{
+		value = ft_strdup("?");
+		end = i + 1;
+	}
 	if (ft_strcmp(value, ""))
 	{
 		if (!ft_strcmp(value, "?"))
 			ret = ft_itoa(Signal);
 		else
+		{
 			ret = get_env(value, &data.vars);
+			free(value);
+		}
 		return (check_env_2(ret, input, start, end));
 	}
 	else
+	{
+		free(value);
 		return (input);
+	}
 }
 
 char	*check_env_2(char *ret, char *input, int start, int end)

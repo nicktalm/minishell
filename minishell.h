@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:50:22 by lbohm             #+#    #+#             */
-/*   Updated: 2024/03/27 12:43:46 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/28 18:27:42 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_here_doc
 	struct s_cmd	*cmd;
 }				t_here_doc;
 
+void	sort_export(t_var **export);
 void	exe_export_env(t_data *data, t_exe *cmd);
 void	exe_export_export(t_data *data, t_exe *cmd);
 void	check_for_bultin(t_data *data, t_exe *cmd);
@@ -153,7 +154,7 @@ t_cmd	*search_next(t_cmd *cmd, int type);
 char	**alloc_argv(char **s);
 void	check_for_mode(t_redir **cmd, char **q);
 char	**cat_struct_2(char **first, char **second, char **new);
-void	cat_struct(t_cmd *f, t_cmd *s);
+void	cat_struct(t_cmd *new, t_cmd *cmd);
 int		count_argvs(char **argv);
 
 // execute
@@ -170,7 +171,7 @@ void	exe_here_doc(t_data *data, t_here_doc *cmd);
 
 void	exe_cd(t_data *data, t_exe *cmd);
 void	exe_pwd(void);
-void	exe_exit(t_data data);
+void	exe_exit(t_data data, t_exe *cmd);
 void	ctrl_c(int signal);
 void	exe_env(t_var *vars);
 
@@ -188,6 +189,15 @@ void	free_lst(t_var	**lst);
 t_var	*ft_lstnew_new(char *name, char *value);
 void	ft_lstadd_back_new(t_var **lst, t_var *new);
 void	init_env(char **env, t_var **vars);
+
+// sort_export
+
+t_var	*ft_lstlast_test(t_var *lst);
+void	swap_a(t_var **a);
+void	rotate_a(t_var **a);
+int		check_sort(t_var **export);
+void	sort_export(t_var **export);
+char	*biggest(t_var **export);
 
 // struct nbr
 

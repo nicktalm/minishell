@@ -14,6 +14,9 @@
 
 void	exe_execve(t_data *data, t_exe *cmd)
 {
+	int	opt;
+
+	opt = 0;
 	check_for_bultin(data, cmd);
 	data->path_exe = check_for_access(*data, cmd->argv);
 	if (!(data->path_exe))
@@ -183,6 +186,9 @@ void	exe_here_doc(t_data *data, t_here_doc *cmd)
 
 void	first_cmd(int *pfd, int id, t_pipe *cmd, t_data *data)
 {
+	int	opt;
+
+	opt = 1;
 	id = fork();
 	if (id < 0)
 		error(ERROR_6);
@@ -191,11 +197,15 @@ void	first_cmd(int *pfd, int id, t_pipe *cmd, t_data *data)
 		close(pfd[0]);
 		if (dup2(pfd[1], STDOUT_FILENO) == -1)
 			error(ERROR_3);
+		ioctl(pfd[1], FIONBIO, &opt);
+		// if (ioctl(pfd[1], FIONBIO, &opt) == EAGAIN)
+		// 	error("ioctl\n");
 		execute_cmd(cmd->left, data);
 	}
 	if (id > 0)
 	{
 		waitpid(0, NULL, 0);
+		opt = 0;
 		close(pfd[1]);
 		if (dup2(pfd[0], STDIN_FILENO) == -1)
 			error(ERROR_3);

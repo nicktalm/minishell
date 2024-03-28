@@ -6,7 +6,7 @@
 /*   By: lbohm <lbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 12:53:56 by lucabohn          #+#    #+#             */
-/*   Updated: 2024/03/27 12:42:36 by ntalmon          ###   ########.fr       */
+/*   Updated: 2024/03/28 18:24:52 by lbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ int	main(int argc, char **argv, char **env)
 	if (argc == 1)
 	{
 		Signal = 0;
+		signal(SIGINT, ctrl_c);
 		init_env(env, &data.vars);
 		data.cmd_path = ft_split(get_env("PATH", &data.vars), ':');
 		init_env(env, &data.export);
-		// sort_export(&data.export);
+		sort_export(&data.export);
 		while (1)
 		{
 			data.in = print_prompt();
 			data.in = check_for_quotes(data.in, data);
-			//printf("input = %s\n", data.in);
 			if (ft_strcmp(data.in, ""))
 			{
 				token(data.in, &data);
@@ -68,9 +68,10 @@ int	ka(t_data *data)
 		{
 			exe_export_env(data, cmd);
 			exe_export_export(data, cmd);
+			sort_export(&data->export);
 		}
 		else if (!ft_strcmp(cmd->argv[0], "exit"))
-			exe_exit(*data);
+			exe_exit(*data, cmd);
 		else if (!ft_strcmp(cmd->argv[0], "unset"))
 			exe_unset(data, cmd);
 		else if (!ft_strcmp(cmd->argv[0], "cd"))
